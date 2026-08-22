@@ -4,29 +4,19 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#1c4b8c">
-<title>Tracker de transporte</title>
+<title>Tracker v3</title>
 <style>
-:root{
-  --b:#1c4b8c; --bg:#0e1116; --card:#171c24; --line:#232a34;
-  --tx:#e8ecf1; --dim:#8b95a3; --ok:#3fb950; --warn:#d29922;
-}
+:root{--b:#1c4b8c;--bg:#0e1116;--card:#171c24;--line:#232a34;--tx:#e8ecf1;
+      --dim:#8b95a3;--ok:#3fb950;--warn:#d29922;--bad:#f85149;--gps:#2f81f7}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-body{
-  margin:0;background:var(--bg);color:var(--tx);
-  font:15px/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;
-  padding-bottom:env(safe-area-inset-bottom);
-}
-header{
-  background:var(--b);padding:14px 16px;
-  padding-top:calc(14px + env(safe-area-inset-top));
-  display:flex;align-items:center;gap:10px;position:sticky;top:0;z-index:10;
-}
-.badge{
-  background:#fff;color:var(--b);width:30px;height:30px;border-radius:50%;
-  display:flex;align-items:center;justify-content:center;font-weight:800;font-size:17px;
-}
-header .t{font-weight:700;font-size:15px}
-header .s{font-size:11.5px;opacity:.85}
+body{margin:0;background:var(--bg);color:var(--tx);
+  font:15px/1.45 -apple-system,BlinkMacSystemFont,system-ui,sans-serif;
+  padding-bottom:env(safe-area-inset-bottom)}
+header{background:var(--b);padding:14px 16px;padding-top:calc(14px + env(safe-area-inset-top));
+  display:flex;align-items:center;gap:10px;position:sticky;top:0;z-index:10}
+.badge{background:#fff;color:var(--b);width:30px;height:30px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;font-weight:800}
+header .t{font-weight:700;font-size:15px} header .s{font-size:11.5px;opacity:.85}
 main{padding:14px}
 .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px;margin-bottom:12px}
 label{display:block;font-size:12px;color:var(--dim);margin:10px 0 5px;text-transform:uppercase;letter-spacing:.6px}
@@ -36,99 +26,119 @@ button{background:var(--b);color:#fff;border:none;font-weight:700;margin-top:14p
 button:active{opacity:.75}
 button.sec{background:#232a34;color:var(--tx);font-weight:600;margin-top:8px}
 button.gh{background:transparent;border:1px solid var(--line);color:var(--dim);font-weight:600}
-.row{display:flex;gap:8px}
-.row button{margin-top:8px}
+.row{display:flex;gap:8px} .row button{margin-top:8px}
 .hide{display:none!important}
-
-/* estado */
-.state{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.state{display:flex;align-items:center;gap:10px;margin-bottom:10px}
 .dot{width:11px;height:11px;border-radius:50%;background:var(--dim);flex:none}
 .dot.mv{background:var(--ok);animation:p 1.1s infinite}
 .dot.st{background:var(--warn)}
 @keyframes p{0%,100%{opacity:1}50%{opacity:.25}}
-.state .n{font-weight:700;font-size:15px}
-.state .d{font-size:12px;color:var(--dim)}
-
-/* lista de estaciones */
+.state .n{font-weight:700} .state .d{font-size:12px;color:var(--dim)}
 .stations{list-style:none;margin:0;padding:0}
-.stations li{
-  display:flex;align-items:center;gap:12px;padding:9px 0;
-  border-bottom:1px solid var(--line);font-size:14.5px;color:var(--dim);
-}
+.stations li{display:flex;align-items:center;gap:12px;padding:9px 0;
+  border-bottom:1px solid var(--line);font-size:14.5px;color:var(--dim)}
 .stations li:last-child{border-bottom:none}
 .pin{width:13px;height:13px;border-radius:50%;border:2px solid var(--line);flex:none}
-.done .pin{background:var(--line);border-color:var(--line)}
-.now{color:var(--tx);font-weight:700}
-.now .pin{background:var(--b);border-color:var(--b);box-shadow:0 0 0 4px rgba(227,6,19,.22)}
+.done .pin{background:var(--line)} .now{color:var(--tx);font-weight:700}
+.now .pin{background:var(--b);border-color:var(--b);box-shadow:0 0 0 4px rgba(28,75,140,.25)}
+.gps .pin{border-color:var(--gps);box-shadow:0 0 0 3px rgba(47,129,247,.22)}
+.gps{color:var(--gps)}
 .meta{margin-left:auto;font-size:11px;color:var(--dim);font-weight:400}
-
-/* metricas */
 .grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
 .m{background:#0b0e13;border-radius:8px;padding:9px}
 .m .k{font-size:10px;color:var(--dim);text-transform:uppercase;letter-spacing:.6px}
 .m .v{font-size:17px;font-weight:700;font-variant-numeric:tabular-nums}
 h3{font-size:12px;color:var(--dim);text-transform:uppercase;letter-spacing:.7px;margin:0 0 10px}
 .note{font-size:12px;color:var(--dim);margin-top:10px}
 .err{background:#3d1418;border:1px solid #6e2028;color:#ffb3ba;padding:11px;border-radius:9px;font-size:13px;margin-bottom:12px}
-.bar{height:3px;background:var(--line);border-radius:2px;overflow:hidden;margin-top:6px}
-.bar i{display:block;height:100%;background:var(--b);width:0;transition:width .3s}
-#log{font:11px/1.5 ui-monospace,Menlo,monospace;color:var(--dim);max-height:160px;overflow-y:auto;white-space:pre-wrap}
+.bar{height:4px;background:var(--line);border-radius:2px;overflow:hidden;margin-top:8px}
+.bar i{display:block;height:100%;background:var(--b);width:0;transition:width .4s}
+.conf{height:4px;background:var(--line);border-radius:2px;overflow:hidden;margin-top:5px}
+.conf i{display:block;height:100%;background:var(--ok);width:0;transition:width .5s}
+#log{font:11px/1.5 ui-monospace,Menlo,monospace;color:var(--dim);max-height:170px;overflow-y:auto;white-space:pre-wrap}
+.ev{padding:1px 0}
+.ev b{color:#6b7583;font-weight:600}
+.ev.llegada{color:var(--ok)} .ev.arranque{color:#79c0ff}
+.ev.frenada{color:var(--warn)} .ev.intermedia{color:#c9a0dc}
+.ev.marcaLlegada,.ev.marcaArranque{color:#ffd166;font-weight:700}
+.ev.correccion{color:#ff9e64} .ev.aviso{color:var(--bad)}
+.ev.fuente{color:var(--gps);font-weight:700}
+.ev.sombra{color:#5a6472;font-style:italic}
+.marca{background:var(--warn);color:#000;font-weight:800;margin-top:10px}
+/* Tarjeta de fuente activa */
+.src{border-width:2px}
+.src.esGps{border-color:var(--gps);background:linear-gradient(180deg,rgba(47,129,247,.12),var(--card))}
+.src.esAcc{border-color:#4a5464;background:linear-gradient(180deg,rgba(139,149,163,.08),var(--card))}
+.srcTop{display:flex;align-items:baseline;gap:8px;margin-bottom:2px}
+.srcTop .n{font-size:19px;font-weight:800;letter-spacing:.4px}
+.esGps .srcTop .n{color:var(--gps)} .esAcc .srcTop .n{color:#c3ccd8}
+.srcTop .tag{font-size:10px;color:var(--dim);text-transform:uppercase;letter-spacing:.8px}
+.srcWhy{font-size:12px;color:var(--dim);margin-bottom:10px}
+.gbar{height:4px;background:var(--line);border-radius:2px;overflow:hidden;margin:6px 0 10px}
+.gbar i{display:block;height:100%;background:var(--gps);width:0;transition:width .4s}
 </style>
 </head>
 <body>
-
 <header>
-  <div class="badge" id="hdrBadge">B</div>
-  <div>
-    <div class="t" id="hdrLinea">Línea</div>
-    <div class="s" id="hdrSub">Configurar viaje</div>
-  </div>
+  <div class="badge" id="hdrBadge">?</div>
+  <div><div class="t" id="hdrLinea">Tracker v3</div>
+       <div class="s" id="hdrSub">Configurar viaje</div></div>
 </header>
 
 <main>
-
-<!-- ============ SETUP ============ -->
 <section id="setup">
   <div id="err" class="err hide"></div>
-
   <div class="card">
     <label>Línea</label>
     <select id="linea">
       <option value="B">Subte B</option>
-      <option value="MITRE" selected>Tren Mitre · ramal Suárez</option>
+      <option value="MITRE">Mitre · ramal Suárez</option>
     </select>
-
-    <label>Sentido</label>
-    <select id="dir">
-      <option value="0">Hacia Juan Manuel de Rosas</option>
-      <option value="1">Hacia Leandro N. Alem</option>
-    </select>
-
-    <label>Estación donde subís</label>
-    <select id="from"></select>
-
-    <button id="start">Empezar seguimiento</button>
+    <label>Sentido</label><select id="dir"></select>
+    <label>Estación donde subís</label><select id="from"></select>
+    <button id="start">Empezar</button>
     <div class="note">
-      Vas a tener que dar permiso al sensor de movimiento, y al GPS si estás
-      en superficie. Dejá la pantalla prendida: el navegador pausa el
-      acelerómetro si se bloquea.
+      Elegí bien la estación de partida: todo el seguimiento arranca de ahí.<br><br>
+      <b>Ahora hay dos fuentes.</b> Si el GPS tiene buena señal — o sea, a cielo
+      abierto — manda el GPS, que da posición absoluta. Cuando la señal se cae,
+      pasa solo al acelerómetro. El cambio se registra y podés verlo en vivo.<br><br>
+      En el subte el GPS no va a servir nunca, y está bien: ahí es donde el
+      acelerómetro tiene que demostrar que funciona.
     </div>
   </div>
 </section>
 
-<!-- ============ RUNNING ============ -->
 <section id="run" class="hide">
+  <div class="card src esAcc" id="srcCard">
+    <div class="srcTop">
+      <div class="n" id="srcName">—</div>
+      <div class="tag">fuente activa</div>
+    </div>
+    <div class="srcWhy" id="srcWhy">—</div>
+    <div class="gbar"><i id="gConfBar"></i></div>
+    <div class="g3">
+      <div class="m"><div class="k">Confianza</div><div class="v" id="gConf">—</div></div>
+      <div class="m"><div class="k">Precisión</div><div class="v" id="gPrec">—</div></div>
+      <div class="m"><div class="k">Último fix</div><div class="v" id="gEdad">—</div></div>
+      <div class="m"><div class="k">Desvío vía</div><div class="v" id="gDesv">—</div></div>
+      <div class="m"><div class="k">Velocidad</div><div class="v" id="gVel">—</div></div>
+      <div class="m"><div class="k">Discrepancia</div><div class="v" id="gDisc">—</div></div>
+    </div>
+    <div class="note">La discrepancia es cuánto se separan las dos estimaciones.
+    Es el número más valioso del viaje: mide el error del acelerómetro justo
+    cuando podemos verlo. Según el GPS estás en <b id="gEst">—</b>.</div>
+  </div>
 
   <div class="card">
     <div class="state">
       <div class="dot" id="dot"></div>
-      <div>
-        <div class="n" id="stName">Detenido</div>
-        <div class="d" id="stDesc">Esperando que arranque</div>
-      </div>
+      <div><div class="n" id="stName">—</div><div class="d" id="stDesc"></div></div>
     </div>
     <div class="bar"><i id="segBar"></i></div>
     <div class="note" id="segInfo"></div>
+    <div class="conf"><i id="confBar"></i></div>
+    <div class="note" id="confTxt" style="margin-top:5px"></div>
   </div>
 
   <div class="card">
@@ -137,11 +147,14 @@ h3{font-size:12px;color:var(--dim);text-transform:uppercase;letter-spacing:.7px;
   </div>
 
   <div class="card">
-    <h3>Corregir</h3>
+    <h3>Marcas manuales</h3>
     <div class="note" style="margin-top:0">
-      Si la estación marcada no coincide con la real, ajustala. Cada corrección
-      queda registrada: es la métrica que dice si el detector funciona.
+      Tocá el amarillo apenas el tren se detiene, sin esperar a que abran las
+      puertas. Queda con el milisegundo exacto y sirve de verdad de campo.
+      Si te olvidás de alguno no pasa nada.
     </div>
+    <button class="marca" id="marcaLlegada">LLEGUÉ a una estación</button>
+    <button class="sec" id="marcaArranque">Arrancó</button>
     <div class="row">
       <button class="sec" id="prev">← Una menos</button>
       <button class="sec" id="next">Una más →</button>
@@ -149,14 +162,16 @@ h3{font-size:12px;color:var(--dim);text-transform:uppercase;letter-spacing:.7px;
   </div>
 
   <div class="card">
-    <h3>Sensor</h3>
+    <h3>Sensores</h3>
     <div class="grid">
       <div class="m"><div class="k">Aceleración</div><div class="v" id="mAcc">0.00</div></div>
-      <div class="m"><div class="k">Vibración</div><div class="v" id="mVib">0.00</div></div>
+      <div class="m"><div class="k">Umbral</div><div class="v" id="mUmb">—</div></div>
+      <div class="m"><div class="k">Vibración</div><div class="v" id="mVib">0.000</div></div>
+      <div class="m"><div class="k">Calidad eje</div><div class="v" id="mEje">—</div></div>
       <div class="m"><div class="k">Muestreo</div><div class="v" id="mHz">— Hz</div></div>
-      <div class="m"><div class="k">Eje fijado</div><div class="v" id="mAxis">no</div></div>
+      <div class="m"><div class="k">Brújula</div><div class="v" id="mBru">—</div></div>
     </div>
-    <div class="note" id="calNote"></div>
+    <div class="note" id="modoNota"></div>
   </div>
 
   <div class="card">
@@ -166,201 +181,572 @@ h3{font-size:12px;color:var(--dim);text-transform:uppercase;letter-spacing:.7px;
       <div class="m"><div class="k">Fixes GPS</div><div class="v" id="mG">0</div></div>
     </div>
     <div class="note" id="gpsNote">Buscando GPS…</div>
-    <button class="gh" id="dlAcc">Descargar acelerómetro (CSV)</button>
+    <button class="gh" id="dlAcc">Descargar sensores (CSV)</button>
     <button class="gh" id="dlGps">Descargar GPS (CSV)</button>
-  </div>
-
-  <div class="card">
-    <h3>Eventos</h3>
-    <div id="log"></div>
-    <button class="gh" id="dl">Descargar registro</button>
+    <button class="gh" id="dlLog">Descargar eventos (JSON)</button>
     <button class="gh" id="stop">Terminar viaje</button>
   </div>
 
+  <div class="card"><h3>Eventos</h3><div id="log"></div></div>
 </section>
 </main>
 <script>
 /* ==========================================================================
-   Datos del recorrido — Línea B, ambos sentidos.
-   Extraídos del GTFS oficial: distancia real sobre vía (shape_dist_traveled)
-   y tiempo programado entre estaciones (stop_times).
+   Recorridos — extraídos del GTFS oficial.
    ========================================================================== */
-const LINEAS = {"B": {"nombre": "Subte B", "sentidos": [{"hacia": "Juan Manuel de Rosas", "est": [{"n": "Leandro N. Alem", "d": null, "t": null}, {"n": "Florida", "d": 400, "t": 43}, {"n": "Carlos Pellegrini", "d": 630, "t": 65}, {"n": "Uruguay", "d": 530, "t": 55}, {"n": "Callao", "d": 530, "t": 55}, {"n": "Pasteur", "d": 600, "t": 62}, {"n": "Pueyrredon", "d": 540, "t": 56}, {"n": "Carlos Gardel", "d": 600, "t": 64}, {"n": "Medrano", "d": 890, "t": 93}, {"n": "Angel Gallardo", "d": 890, "t": 93}, {"n": "Malabia", "d": 890, "t": 92}, {"n": "Dorrego", "d": 1090, "t": 114}, {"n": "Federico Lacroze", "d": 760, "t": 79}, {"n": "Tronador - Villa Ortuzar", "d": 1130, "t": 117}, {"n": "De Los Incas - Parque Chas", "d": 710, "t": 75}, {"n": "Echeverria", "d": 870, "t": 91}, {"n": "Juan Manuel de Rosas", "d": 710, "t": 73}]}, {"hacia": "Leandro N. Alem", "est": [{"n": "Juan Manuel de Rosas", "d": null, "t": null}, {"n": "Echeverria", "d": 710, "t": 73}, {"n": "De Los Incas - Parque Chas", "d": 870, "t": 91}, {"n": "Tronador - Villa Ortuzar", "d": 710, "t": 75}, {"n": "Federico Lacroze", "d": 1130, "t": 117}, {"n": "Dorrego", "d": 760, "t": 79}, {"n": "Malabia", "d": 1090, "t": 114}, {"n": "Angel Gallardo", "d": 890, "t": 92}, {"n": "Medrano", "d": 890, "t": 93}, {"n": "Carlos Gardel", "d": 890, "t": 93}, {"n": "Pueyrredon", "d": 600, "t": 64}, {"n": "Pasteur", "d": 540, "t": 56}, {"n": "Callao", "d": 600, "t": 62}, {"n": "Uruguay", "d": 530, "t": 55}, {"n": "Carlos Pellegrini", "d": 530, "t": 55}, {"n": "Florida", "d": 630, "t": 65}, {"n": "Leandro N. Alem", "d": 400, "t": 43}]}]}, "MITRE": {"nombre": "Mitre · ramal Suárez", "sentidos": [{"hacia": "J. L. Suárez", "est": [{"n": "Retiro LM", "d": null, "t": null}, {"n": "3 de Febrero", "d": 4910, "t": 660}, {"n": "Ministro Carranza", "d": 1051, "t": 120}, {"n": "Colegiales", "d": 1215, "t": 180}, {"n": "Belgrano R", "d": 1357, "t": 180}, {"n": "L. M. Drago", "d": 1574, "t": 240}, {"n": "General Urquiza", "d": 1071, "t": 120}, {"n": "Pueyrredón", "d": 1439, "t": 180}, {"n": "Miguelete", "d": 1391, "t": 240}, {"n": "San Martín", "d": 1606, "t": 240}, {"n": "San Andrés", "d": 1355, "t": 180}, {"n": "Malaver", "d": 958, "t": 120}, {"n": "Villa Ballester", "d": 1160, "t": 180}, {"n": "Chilavert", "d": 1260, "t": 180}, {"n": "J. L. Suárez", "d": 1179, "t": 180}]}, {"hacia": "Retiro", "est": [{"n": "J. L. Suárez", "d": null, "t": null}, {"n": "Chilavert", "d": 1179, "t": 180}, {"n": "Villa Ballester", "d": 1260, "t": 180}, {"n": "Malaver", "d": 1160, "t": 180}, {"n": "San Andrés", "d": 958, "t": 120}, {"n": "San Martín", "d": 1355, "t": 180}, {"n": "Miguelete", "d": 1606, "t": 240}, {"n": "Pueyrredón", "d": 1391, "t": 180}, {"n": "General Urquiza", "d": 1439, "t": 180}, {"n": "L. M. Drago", "d": 1071, "t": 180}, {"n": "Belgrano R", "d": 1574, "t": 240}, {"n": "Colegiales", "d": 1357, "t": 180}, {"n": "Ministro Carranza", "d": 1215, "t": 180}, {"n": "3 de Febrero", "d": 1051, "t": 120}, {"n": "Retiro LM", "d": 4910, "t": 660}]}]}};
+const LINEAS = {"B": {"nombre": "Subte B", "subterraneo": true, "sentidos": [{"hacia": "Juan Manuel de Rosas", "est": [{"n": "Leandro N. Alem", "d": null, "t": null, "lat": -34.602967, "lon": -58.369956, "s": 3.2}, {"n": "Florida", "d": 400, "t": 43, "lat": -34.603302, "lon": -58.374535, "s": 424.4}, {"n": "Carlos Pellegrini", "d": 630, "t": 65, "lat": -34.603701, "lon": -58.381379, "s": 1053.0}, {"n": "Uruguay", "d": 530, "t": 55, "lat": -34.604046, "lon": -58.387106, "s": 1579.1}, {"n": "Callao", "d": 530, "t": 55, "lat": -34.604458, "lon": -58.392846, "s": 2105.0}, {"n": "Pasteur", "d": 600, "t": 62, "lat": -34.604623, "lon": -58.399357, "s": 2701.9}, {"n": "Pueyrredon", "d": 540, "t": 56, "lat": -34.604613, "lon": -58.405234, "s": 3240.2}, {"n": "Carlos Gardel", "d": 600, "t": 64, "lat": -34.604103, "lon": -58.411705, "s": 3837.6}, {"n": "Medrano", "d": 890, "t": 93, "lat": -34.60314, "lon": -58.421303, "s": 4726.5}, {"n": "Angel Gallardo", "d": 890, "t": 93, "lat": -34.602157, "lon": -58.431022, "s": 5623.8}, {"n": "Malabia", "d": 890, "t": 92, "lat": -34.599048, "lon": -58.439675, "s": 6503.5}, {"n": "Dorrego", "d": 1090, "t": 114, "lat": -34.591693, "lon": -58.447618, "s": 7599.0}, {"n": "Federico Lacroze", "d": 760, "t": 79, "lat": -34.587565, "lon": -58.454097, "s": 8357.2}, {"n": "Tronador - Villa Ortuzar", "d": 1130, "t": 117, "lat": -34.584319, "lon": -58.465676, "s": 9480.0}, {"n": "De Los Incas - Parque Chas", "d": 710, "t": 75, "lat": -34.581941, "lon": -58.472949, "s": 10197.0}, {"n": "Echeverria", "d": 870, "t": 91, "lat": -34.577998, "lon": -58.480764, "s": 11067.4}, {"n": "Juan Manuel de Rosas", "d": 710, "t": 73, "lat": -34.574011, "lon": -58.486718, "s": 11770.6}], "via": [[-34.60297, -58.36992], [-34.60446, -58.39199], [-34.60475, -58.40362], [-34.60401, -58.41037], [-34.60419, -58.41328], [-34.60352, -58.41735], [-34.60204, -58.43222], [-34.59983, -58.43888], [-34.59019, -58.44932], [-34.58921, -58.45051], [-34.5884, -58.45195], [-34.58574, -58.45963], [-34.58503, -58.46344], [-34.58167, -58.47395], [-34.57997, -58.47547], [-34.5791, -58.47897], [-34.57395, -58.4868]]}, {"hacia": "Leandro N. Alem", "est": [{"n": "Juan Manuel de Rosas", "d": null, "t": null, "lat": -34.574011, "lon": -58.486718, "s": 10.0}, {"n": "Echeverria", "d": 710, "t": 73, "lat": -34.577998, "lon": -58.480764, "s": 713.5}, {"n": "De Los Incas - Parque Chas", "d": 870, "t": 91, "lat": -34.581941, "lon": -58.472949, "s": 1583.8}, {"n": "Tronador - Villa Ortuzar", "d": 710, "t": 75, "lat": -34.584319, "lon": -58.465676, "s": 2301.0}, {"n": "Federico Lacroze", "d": 1130, "t": 117, "lat": -34.587565, "lon": -58.454097, "s": 3423.5}, {"n": "Dorrego", "d": 760, "t": 79, "lat": -34.591693, "lon": -58.447618, "s": 4182.4}, {"n": "Malabia", "d": 1090, "t": 114, "lat": -34.599048, "lon": -58.439675, "s": 5278.1}, {"n": "Angel Gallardo", "d": 890, "t": 92, "lat": -34.602157, "lon": -58.431022, "s": 6157.6}, {"n": "Medrano", "d": 890, "t": 93, "lat": -34.60314, "lon": -58.421303, "s": 7055.2}, {"n": "Carlos Gardel", "d": 890, "t": 93, "lat": -34.604103, "lon": -58.411705, "s": 7942.6}, {"n": "Pueyrredon", "d": 600, "t": 64, "lat": -34.604613, "lon": -58.405234, "s": 8540.5}, {"n": "Pasteur", "d": 540, "t": 56, "lat": -34.604623, "lon": -58.399357, "s": 9079.3}, {"n": "Callao", "d": 600, "t": 62, "lat": -34.604458, "lon": -58.392846, "s": 9676.4}, {"n": "Uruguay", "d": 530, "t": 55, "lat": -34.604046, "lon": -58.387106, "s": 10203.1}, {"n": "Carlos Pellegrini", "d": 530, "t": 55, "lat": -34.603701, "lon": -58.381379, "s": 10729.5}, {"n": "Florida", "d": 630, "t": 65, "lat": -34.603302, "lon": -58.374535, "s": 11358.3}, {"n": "Leandro N. Alem", "d": 400, "t": 43, "lat": -34.602967, "lon": -58.369956, "s": 11779.7}], "via": [[-34.57395, -58.4868], [-34.5791, -58.47897], [-34.57997, -58.47547], [-34.58167, -58.47395], [-34.58503, -58.46344], [-34.58574, -58.45963], [-34.5884, -58.45195], [-34.58921, -58.45051], [-34.59019, -58.44932], [-34.59983, -58.43888], [-34.60204, -58.43222], [-34.60352, -58.41735], [-34.60419, -58.41328], [-34.60401, -58.41037], [-34.60475, -58.40362], [-34.60446, -58.39199], [-34.60297, -58.36992]]}]}, "MITRE": {"nombre": "Mitre · ramal Suárez", "subterraneo": false, "sentidos": [{"hacia": "Retiro", "est": [{"n": "J. L. Suárez", "d": null, "t": null, "lat": -34.534707, "lon": -58.575981, "s": 119.9}, {"n": "Chilavert", "d": 1179, "t": 180, "lat": -34.542232, "lon": -58.566917, "s": 1300.6}, {"n": "Villa Ballester", "d": 1260, "t": 180, "lat": -34.550158, "lon": -58.557078, "s": 2562.6}, {"n": "Malaver", "d": 1160, "t": 180, "lat": -34.557372, "lon": -58.547933, "s": 3723.7}, {"n": "San Andrés", "d": 958, "t": 120, "lat": -34.563564, "lon": -58.540661, "s": 4679.7}, {"n": "San Martín", "d": 1355, "t": 180, "lat": -34.573419, "lon": -58.531958, "s": 6040.6}, {"n": "Miguelete", "d": 1606, "t": 240, "lat": -34.581072, "lon": -58.517079, "s": 7678.1}, {"n": "Pueyrredón", "d": 1391, "t": 180, "lat": -34.580496, "lon": -58.501898, "s": 9075.3}, {"n": "General Urquiza", "d": 1439, "t": 180, "lat": -34.574712, "lon": -58.487839, "s": 10532.7}, {"n": "L. M. Drago", "d": 1071, "t": 180, "lat": -34.568417, "lon": -58.478991, "s": 11610.1}, {"n": "Belgrano R", "d": 1574, "t": 240, "lat": -34.568051, "lon": -58.461808, "s": 13266.5}, {"n": "Colegiales", "d": 1357, "t": 180, "lat": -34.572975, "lon": -58.448253, "s": 14624.4}, {"n": "Ministro Carranza", "d": 1215, "t": 180, "lat": -34.575705, "lon": -58.435404, "s": 15880.7}, {"n": "3 de Febrero", "d": 1051, "t": 120, "lat": -34.571748, "lon": -58.424982, "s": 16939.3}, {"n": "Retiro LM", "d": 4910, "t": 660, "lat": -34.589976, "lon": -58.376129, "s": 22411.7}], "via": [[-34.5339, -58.57685], [-34.53582, -58.57488], [-34.56239, -58.54167], [-34.57061, -58.53518], [-34.57153, -58.53429], [-34.5757, -58.52917], [-34.57783, -58.52621], [-34.57918, -58.52363], [-34.58035, -58.52046], [-34.58116, -58.51643], [-34.58133, -58.51448], [-34.58132, -58.51165], [-34.58043, -58.50125], [-34.57955, -58.49725], [-34.57851, -58.49448], [-34.57398, -58.48659], [-34.57033, -58.4824], [-34.5688, -58.47998], [-34.5668, -58.47461], [-34.56618, -58.47143], [-34.56623, -58.46817], [-34.56689, -58.465], [-34.56975, -58.45724], [-34.57135, -58.45215], [-34.57552, -58.44199], [-34.57597, -58.44034], [-34.57615, -58.4384], [-34.57587, -58.43602], [-34.57404, -58.42941], [-34.57258, -58.4264], [-34.56935, -58.42091], [-34.56818, -58.4182], [-34.56775, -58.41609], [-34.56763, -58.41436], [-34.56769, -58.41239], [-34.56801, -58.41048], [-34.56846, -58.40905], [-34.56952, -58.40677], [-34.57742, -58.39754], [-34.57862, -58.39591], [-34.58234, -58.3877], [-34.58559, -58.38333], [-34.5907, -58.37488]]}, {"hacia": "J.L. Suárez", "est": [{"n": "Retiro LM", "d": null, "t": null, "lat": -34.589976, "lon": -58.376129, "s": 140.1}, {"n": "3 de Febrero", "d": 4910, "t": 660, "lat": -34.571748, "lon": -58.424982, "s": 5611.8}, {"n": "Ministro Carranza", "d": 1051, "t": 120, "lat": -34.575705, "lon": -58.435404, "s": 6670.4}, {"n": "Colegiales", "d": 1215, "t": 180, "lat": -34.572975, "lon": -58.448253, "s": 7927.3}, {"n": "Belgrano R", "d": 1357, "t": 180, "lat": -34.568051, "lon": -58.461808, "s": 9284.8}, {"n": "L. M. Drago", "d": 1574, "t": 240, "lat": -34.568417, "lon": -58.478991, "s": 10940.9}, {"n": "General Urquiza", "d": 1071, "t": 120, "lat": -34.574712, "lon": -58.487839, "s": 12019.0}, {"n": "Pueyrredón", "d": 1439, "t": 180, "lat": -34.580496, "lon": -58.501898, "s": 13476.7}, {"n": "Miguelete", "d": 1391, "t": 240, "lat": -34.581072, "lon": -58.517079, "s": 14872.9}, {"n": "San Martín", "d": 1606, "t": 240, "lat": -34.573419, "lon": -58.531958, "s": 16510.6}, {"n": "San Andrés", "d": 1355, "t": 180, "lat": -34.563564, "lon": -58.540661, "s": 17871.9}, {"n": "Malaver", "d": 958, "t": 120, "lat": -34.557372, "lon": -58.547933, "s": 18831.7}, {"n": "Villa Ballester", "d": 1160, "t": 180, "lat": -34.550158, "lon": -58.557078, "s": 19992.3}, {"n": "Chilavert", "d": 1260, "t": 180, "lat": -34.542232, "lon": -58.566917, "s": 21253.9}, {"n": "J. L. Suárez", "d": 1179, "t": 180, "lat": -34.534707, "lon": -58.575981, "s": 22430.8}], "via": [[-34.5907, -58.37488], [-34.58559, -58.38333], [-34.58234, -58.3877], [-34.57862, -58.39591], [-34.57742, -58.39754], [-34.56952, -58.40677], [-34.56846, -58.40905], [-34.56801, -58.41048], [-34.56769, -58.41239], [-34.56763, -58.41436], [-34.56775, -58.41609], [-34.56818, -58.4182], [-34.56935, -58.42091], [-34.57258, -58.4264], [-34.57404, -58.42941], [-34.57587, -58.43602], [-34.57615, -58.4384], [-34.57597, -58.44034], [-34.57552, -58.44199], [-34.57135, -58.45215], [-34.56975, -58.45724], [-34.56689, -58.465], [-34.56623, -58.46817], [-34.56618, -58.47143], [-34.5668, -58.47461], [-34.5688, -58.47998], [-34.57033, -58.4824], [-34.57398, -58.48659], [-34.57851, -58.49448], [-34.57955, -58.49725], [-34.58043, -58.50125], [-34.58132, -58.51165], [-34.58133, -58.51448], [-34.58116, -58.51643], [-34.58035, -58.52046], [-34.57918, -58.52363], [-34.57783, -58.52621], [-34.5757, -58.52917], [-34.57153, -58.53429], [-34.57061, -58.53518], [-34.56239, -58.54167], [-34.53582, -58.57488], [-34.5339, -58.57685]]}]}};
 
 /* ==========================================================================
-   DETECTOR DE MOVIMIENTO
-   --------------------------------------------------------------------------
-   El acelerómetro entrega tres números en los ejes del teléfono, cuya
-   orientación es desconocida. Además mide CAMBIOS de velocidad, no velocidad:
-   un tren detenido y uno a velocidad constante producen ambos cero.
+   DETECTOR v2 — port del módulo Java, con lo aprendido en las pruebas reales.
 
-   La solución es separar la señal en dos bandas de frecuencia:
+   Cambios respecto de la v1, todos motivados por datos:
 
-     · Baja (< 0.3 Hz)  → dinámica del tren: arranca y frena.
-     · Alta (> 5 Hz)    → vibración rueda-riel: indica si el tren rueda.
+   1. UMBRALES ADAPTATIVOS. Los fijos calibrados en la línea E no dispararon
+      nunca la frenada en el Mitre: ese tren acelera más suave (picos de
+      +0.69 / -0.52 contra +1.28 del subte). Ahora se aprende el reposo en los
+      primeros segundos y los umbrales salen de su desviación.
 
-   Hacen falta las dos: sin la alta no se puede distinguir "detenido" de
-   "velocidad constante", porque ambos dan aceleración cero.
+   2. EJE CONTINUO, NO FIJO. Fijarlo en el primer arranque falló: el arranque
+      se detectó 16 s tarde, con el tren ya a 9.4 m/s, y el eje quedó a ~66°
+      del real — cos(66°)=0.41, se comía más de la mitad de la señal. Ahora se
+      estima por covarianza con olvido exponencial.
 
-   La dirección de marcha se descubre sola en el primer arranque: un tren
-   sobre rieles solo puede acelerar hacia adelante, así que ese vector ES
-   la dirección. Se valida contra datos reales: el análisis de componentes
-   principales sobre cuatro tramos medidos dio entre 82% y 97% de varianza
-   explicada por un solo eje.
+   3. MEMORIA DEL EJE MÁS LARGA QUE LA RAMPA DEL TREN. Con 12 s seguía el brazo
+      del pasajero. Con 45 s la calidad subió de 47% a 88% en el subte y de
+      72% a 94% en el tren.
 
-   Umbrales calibrados sobre mediciones reales en la Línea E (agosto 2026,
-   4 tramos a 99.3 Hz): picos de arranque 0.71-1.28 m/s², mínimos de frenada
-   -0.46 a -0.65, vibración 0.043 detenido contra 0.10 en marcha.
-   ========================================================================== */
+   4. LA VIBRACIÓN REPORTA SU CONFIANZA. A 99 Hz separa limpio (0.043 vs 0.10).
+      A los ~57 Hz del navegador las distribuciones se superponen: Nyquist cae
+      en 28 Hz y media banda desaparece.
+
+   5. DETECTA ARRANCAR YA EN MOVIMIENTO. Si la app se abre con el viaje
+      empezado, el reposo aprendido es basura (dio umbral 0.78 y cero eventos).
+      ========================================================================== */
 
 const CFG = {
-  cutoffHz:      0.30,   // corte del pasabajos
-  fastAlpha:     0.30,   // pasaaltos por sustracción (~5.7 Hz a 100 Hz)
-  envAlpha:      0.02,   // suavizado de la envolvente de vibración
-  thStart:       0.45,   // m/s² — umbral de arranque
-  thBrake:       0.28,   // m/s² — umbral de frenada
-  thCruise:      0.10,   // m/s² — "aceleración cero"
-  vibFloor:      0.030,  // piso absoluto de vibración
-  vibRatio:      0.60,   // fracción del nivel "en marcha" que cuenta como rodar
-  debounceMs:    2000,   // persistencia mínima antes de cambiar de estado
-  stopConfirmMs: 3000,   // sin vibración por este tiempo = detenido
-  minSegRatio:   0.55    // fracción del tiempo programado para creer la llegada
+  kArranque: 4.0,      // desviaciones del reposo para creer un arranque
+  kFrenada:  3.0,
+  kCrucero:  1.5,
+  segCalib:  6.0,
+  segConfirmar: 2.5,
+  segQuieto: 4.0,
+  pisoArranque: 0.15,  // m/s²
+  umbralYaEnMarcha: 0.12,
+  sigmaProvisorio: 0.055,
+  tauEje: 45.0,        // > rampa del tren
+  tauSuavizadoEje: 1.5,
+  tauDinamica: 0.8,
+  tauGravedad: 30.0,
+  fraccionMinTramo: 0.55
 };
 
-const S = { DETENIDO:'DETENIDO', ACELERANDO:'ACELERANDO',
-            MARCHA:'MARCHA',     FRENANDO:'FRENANDO' };
+const S = {DETENIDO:'DETENIDO', ARRANCANDO:'ARRANCANDO',
+           EN_MARCHA:'EN_MARCHA', FRENANDO:'FRENANDO'};
+const enMov = e => e !== S.DETENIDO;
 
-class Detector {
+class Ewma {
+  constructor(tau){ this.tau=tau; this.v=0; this.ok=false; }
+  set(x){ this.v=x; this.ok=true; }
+  upd(x,dt){
+    if(!this.ok){ this.v=x; this.ok=true; return this.v; }
+    if(dt<=0||dt>1) return this.v;
+    this.v += (1-Math.exp(-dt/this.tau))*(x-this.v);
+    return this.v;
+  }
+  updAsim(x,dt,tSube,tBaja){
+    if(!this.ok){ this.v=x; this.ok=true; return this.v; }
+    if(dt<=0||dt>1) return this.v;
+    const t = x>this.v ? tSube : tBaja;
+    this.v += (1-Math.exp(-dt/t))*(x-this.v);
+    return this.v;
+  }
+}
+
+class EwmaVec {
+  constructor(tau){ this.tau=tau; this.v=[0,0,0]; this.ok=false; }
+  upd(x,y,z,dt){
+    if(!this.ok){ this.v=[x,y,z]; this.ok=true; return this.v; }
+    if(dt<=0||dt>1) return this.v;
+    const a=1-Math.exp(-dt/this.tau);
+    this.v[0]+=a*(x-this.v[0]); this.v[1]+=a*(y-this.v[1]); this.v[2]+=a*(z-this.v[2]);
+    return this.v;
+  }
+}
+
+/* Eje de marcha: autovector dominante de la covarianza, por iteración de
+   potencia. Se recalcula solo y no depende de acertar el instante del arranque. */
+class TravelAxis {
   constructor(){
-    this.low   = {x:0,y:0,z:0};   // banda baja: lo que hace el tren
-    this.fast  = {x:0,y:0,z:0};   // auxiliar para el pasaaltos
-    this.axis  = null;            // dirección de marcha, normalizada
-    this.vib   = 0;               // energía de alta frecuencia
-    this.vibRef= 0;               // nivel de referencia con el tren en marcha
-    this.accel = 0;               // aceleración con signo sobre el eje
-    this.hz    = 60;
-    this.lowAlpha = this.alphaFor(CFG.cutoffHz, this.hz);
-    this.state = S.DETENIDO;
-    this.stateAt = Date.now();
-    this.stillSince = Date.now();
-    this.tPrev = null;
-    this.muestras = 0;            // para la guarda de calentamiento
-    this.onEvent = null;          // callback: 'arranque' | 'frenada' | 'parada'
+    this.cov=[[0,0,0],[0,0,0],[0,0,0]];
+    this.eje=[1,0,0];
+    this.media=new EwmaVec(CFG.tauEje);
+    this.calidad=0; this.t=0;
   }
-
-  // alpha = 1 - e^(-2*pi*fc/fs).  Se recalcula: el sample rate varía por device.
-  alphaFor(fc, fs){
-    if(!(fs > 0)) return 0.02;
-    return Math.min(1, Math.max(1e-4, 1 - Math.exp(-2*Math.PI*fc/fs)));
+  upd(x,y,z,dt){
+    if(dt<=0||dt>1) return;
+    const m=this.media.upd(x,y,z,dt);
+    const d=[x-m[0], y-m[1], z-m[2]];
+    const a=1-Math.exp(-dt/CFG.tauEje);
+    for(let i=0;i<3;i++) for(let j=0;j<3;j++)
+      this.cov[i][j] += a*(d[i]*d[j] - this.cov[i][j]);
+    this.t+=dt;
+    if(this.t<3) return;
+    this.potencia();
   }
+  potencia(){
+    let v=[...this.eje];
+    for(let it=0; it<3; it++){
+      const w=[0,0,0];
+      for(let i=0;i<3;i++) for(let j=0;j<3;j++) w[i]+=this.cov[i][j]*v[j];
+      const n=Math.hypot(w[0],w[1],w[2]);
+      if(n<1e-12) return;
+      v=[w[0]/n, w[1]/n, w[2]/n];
+    }
+    // Mantener el signo estable: si el autovector se da vuelta, una frenada
+    // se leería como arranque.
+    const dot=v[0]*this.eje[0]+v[1]*this.eje[1]+v[2]*this.eje[2];
+    const s=dot<0?-1:1;
+    this.eje=[s*v[0], s*v[1], s*v[2]];
 
-  push(ax, ay, az, tMs){
-    // --- medir el intervalo real; nunca asumir 1/60 ---
-    if(this.tPrev !== null){
-      const dt = (tMs - this.tPrev)/1000;
-      if(dt > 0.002 && dt < 0.5){
-        this.hz += (1/dt - this.hz)*0.02;
-        this.lowAlpha = this.alphaFor(CFG.cutoffHz, this.hz);
+    let lam=0, tr=0;
+    for(let i=0;i<3;i++){
+      tr+=this.cov[i][i];
+      let acc=0;
+      for(let j=0;j<3;j++) acc+=this.cov[i][j]*this.eje[j];
+      lam+=this.eje[i]*acc;
+    }
+    this.calidad = tr>1e-12 ? lam/tr : 0;
+  }
+  proy(x,y,z){ return x*this.eje[0]+y*this.eje[1]+z*this.eje[2]; }
+}
+
+/* Separación de gravedad SIN giroscopio. Respaldo degradado.
+   Un tren que acelera 0.28 m/s² inclina la gravedad aparente 1.6°, y un
+   teléfono inclinado 1.6° da la misma lectura: son indistinguibles.
+   Constante de tiempo de 30 s, más larga que cualquier rampa de tren. */
+class GravityFilter {
+  constructor(){
+    this.g=new EwmaVec(CFG.tauGravedad);
+    this.suma=[0,0,0]; this.n=0; this.t=0; this.sembrado=false;
+  }
+  sep(x,y,z,dt){
+    if(!this.sembrado){
+      this.suma[0]+=x; this.suma[1]+=y; this.suma[2]+=z; this.n++; this.t+=dt;
+      if(this.t>=2.5){
+        this.g.upd(this.suma[0]/this.n, this.suma[1]/this.n, this.suma[2]/this.n, dt);
+        this.sembrado=true;
+      }
+      return [0,0,0];
+    }
+    const g=this.g.upd(x,y,z,dt);
+    const n=Math.hypot(g[0],g[1],g[2]);
+    if(n<1e-6) return [x,y,z];
+    const gx=g[0]/n, gy=g[1]/n, gz=g[2]/n;
+    const p=x*gx+y*gy+z*gz;
+    return [x-p*gx, y-p*gy, z-p*gz];
+  }
+}
+
+class VibrationSensor {
+  constructor(){
+    this.rapido=new EwmaVec(1/(2*Math.PI*6));
+    this.env=new Ewma(1.5);
+    this.marcha=new Ewma(1); this.reposo=new Ewma(1);
+    this.hz=0; this.aprMarcha=false; this.aprReposo=false;
+  }
+  upd(x,y,z,dt){
+    if(dt>0&&dt<1) this.hz += 0.01*(1/dt - this.hz);
+    const l=this.rapido.upd(x,y,z,dt);
+    const m=Math.hypot(x-l[0], y-l[1], z-l[2]);
+    return this.env.upd(m,dt);
+  }
+  aprenderMarcha(dt){ this.marcha.updAsim(this.env.v,dt,2,30); this.aprMarcha=true; }
+  aprenderReposo(dt){ this.reposo.updAsim(this.env.v,dt,30,2); this.aprReposo=true; }
+  umbral(){
+    if(!this.aprMarcha||!this.aprReposo) return Infinity;
+    return this.reposo.v + 0.45*(this.marcha.v - this.reposo.v);
+  }
+  confianza(){
+    if(!this.aprMarcha||!this.aprReposo) return 0;
+    if(this.hz < 80) return 0.25;         // el navegador recorta la banda
+    const sep = this.marcha.v/Math.max(this.reposo.v,1e-6);
+    return sep<1.3 ? 0.1 : (sep<2 ? 0.5 : 1);
+  }
+  rueda(){ return this.env.v > this.umbral(); }
+}
+
+class MotionDetector {
+  constructor(){
+    this.grav=new GravityFilter();
+    this.eje=new TravelAxis();
+    this.vib=new VibrationSensor();
+    this.paraEje=new EwmaVec(CFG.tauSuavizadoEje);
+    this.dinamica=new Ewma(CFG.tauDinamica);
+    this.mediaReposo=new Ewma(3); this.varReposo=new Ewma(3);
+    this.calibrado=false; this.yaEnMarcha=false;
+    this.estado=S.DETENIDO;
+    this.accel=0;
+    this.tPrev=null; this.tCalib=null;
+    this.tEstado=0; this.tQuieto=0;
+    this.onEvent=()=>{};
+  }
+  sigma(){ return Math.max(Math.sqrt(Math.max(this.varReposo.v,0)), 0.02); }
+  umbArranque(){ return Math.max(this.mediaReposo.v + CFG.kArranque*this.sigma(), CFG.pisoArranque); }
+  umbFrenada(){ return Math.min(this.mediaReposo.v - CFG.kFrenada*this.sigma(), -CFG.pisoArranque*0.7); }
+
+  push(ax,ay,az,t,linear){
+    if(this.tPrev===null){ this.tPrev=t; this.tEstado=t; this.tQuieto=t; return; }
+    const dt=(t-this.tPrev)/1000; this.tPrev=t;
+    if(dt<=0||dt>1) return;
+
+    let x,y,z;
+    if(linear){ x=ax; y=ay; z=az; }
+    else {
+      if(!this.grav.sembrado){ this.grav.sep(ax,ay,az,dt); this.tCalib=t; return; }
+      [x,y,z]=this.grav.sep(ax,ay,az,dt);
+    }
+
+    this.vib.upd(x,y,z,dt);
+    const su=this.paraEje.upd(x,y,z,dt);
+    this.eje.upd(su[0],su[1],su[2],dt);
+    this.accel=this.dinamica.upd(this.eje.proy(su[0],su[1],su[2]), dt);
+
+    if(this.tCalib===null) this.tCalib=t;
+    const trans=(t-this.tCalib)/1000;
+    if(trans < CFG.segCalib){
+      this.mediaReposo.upd(this.accel,dt);
+      const d=this.accel-this.mediaReposo.v;
+      this.varReposo.upd(d*d,dt);
+      this.vib.aprenderReposo(dt);
+      return;
+    }
+
+    if(!this.calibrado){
+      this.calibrado=true;
+      // Si durante la calibración la señal ya se movía mucho, el vehículo no
+      // estaba quieto: la app se abrió con el viaje empezado.
+      if(this.sigma() > CFG.umbralYaEnMarcha){
+        this.yaEnMarcha=true;
+        this.estado=S.EN_MARCHA; this.tEstado=t;
+        this.varReposo.set(CFG.sigmaProvisorio**2);
+        this.mediaReposo.set(0);
+        this.onEvent({tipo:'yaEnMarcha', t});
       }
     }
-    this.tPrev = tMs;
-    this.muestras++;
-
-    // --- banda baja: dinámica del tren ---
-    const a = this.lowAlpha, k = 1-a;
-    this.low.x = this.low.x*k + ax*a;
-    this.low.y = this.low.y*k + ay*a;
-    this.low.z = this.low.z*k + az*a;
-
-    // --- banda alta: un pasaaltos se arma restando un pasabajos rápido ---
-    const f = CFG.fastAlpha, fk = 1-f;
-    this.fast.x = this.fast.x*fk + ax*f;
-    this.fast.y = this.fast.y*fk + ay*f;
-    this.fast.z = this.fast.z*fk + az*f;
-    const rx = ax-this.fast.x, ry = ay-this.fast.y, rz = az-this.fast.z;
-    const mag = Math.sqrt(rx*rx + ry*ry + rz*rz);
-    this.vib += (mag - this.vib)*CFG.envAlpha;
-
-    // --- fijar la dirección de marcha en el arranque ---
-    const lm = Math.hypot(this.low.x, this.low.y, this.low.z);
-    if(!this.axis && this.state === S.DETENIDO && lm > CFG.thStart){
-      this.axis = {x:this.low.x/lm, y:this.low.y/lm, z:this.low.z/lm};
-    }
-
-    // --- proyectar: recuperar el signo que la magnitud perdería ---
-    this.accel = this.axis
-      ? this.low.x*this.axis.x + this.low.y*this.axis.y + this.low.z*this.axis.z
-      : 0;
-
-    // Aprender el nivel de vibración característico del tren en marcha.
-    // Sube rápido y baja lento: nos interesa el techo, no el promedio.
-    if(this.state === S.MARCHA || this.state === S.ACELERANDO){
-      const a2 = this.vib > this.vibRef ? 0.02 : 0.0008;
-      this.vibRef += (this.vib - this.vibRef) * a2;
-    }
-
-    this.step(Date.now());
+    this.fsm(t,dt);
   }
 
-  /* El nivel absoluto de vibración depende del teléfono, de dónde lo lleve
-     el pasajero y del sample rate del navegador (iOS entrega ~60 Hz, no 100).
-     Un umbral fijo calibrado en un dispositivo no transfiere a otro.
-     Por eso el umbral es RELATIVO: se aprende el nivel característico del
-     tren en marcha y se considera "rodando" cualquier valor por encima de
-     una fracción de ese nivel. */
-  get umbralVib(){
-    return this.vibRef > 0.02
-      ? Math.max(CFG.vibFloor, this.vibRef * CFG.vibRatio)
-      : CFG.vibFloor;
-  }
-  get rueda(){ return this.vib > this.umbralVib; }
+  fsm(t,dt){
+    const a=this.accel;
+    const vibOk = this.vib.confianza()>=0.5;
+    const ruedaVib = vibOk && this.vib.rueda();
+    const hayDin = Math.abs(a-this.mediaReposo.v) > CFG.kCrucero*this.sigma();
 
-  step(now){
-    /* Guarda de calentamiento: los filtros EMA arrancan en cero y tardan
-       unos segundos en converger. Sin esto se disparan eventos falsos al
-       principio de cada viaje. */
-    if(this.muestras < this.hz * 4){ this.stateAt = now; return; }
+    if(ruedaVib || hayDin) this.tQuieto=t;
+    const quieto=(t-this.tQuieto)/1000 >= CFG.segQuieto;
+    const asentado=(t-this.tEstado)/1000 >= CFG.segConfirmar;
+    let sig=this.estado;
 
-    if(this.rueda) this.stillSince = 0;
-    else if(!this.stillSince) this.stillSince = now;
-
-    const quieto  = this.stillSince && (now - this.stillSince) >= CFG.stopConfirmMs;
-    const asentado = (now - this.stateAt) >= CFG.debounceMs;
-    const a = this.accel;
-    let next = this.state;
-
-    switch(this.state){
+    switch(this.estado){
       case S.DETENIDO:
-        if(this.rueda && a > CFG.thStart) next = S.ACELERANDO;
-        break;
-      case S.ACELERANDO:
-        if(a < -CFG.thBrake) next = S.FRENANDO;
-        else if(asentado && Math.abs(a) < CFG.thCruise) next = S.MARCHA;
-        break;
-      case S.MARCHA:
-        if(a < -CFG.thBrake) next = S.FRENANDO;
-        else if(quieto) next = S.DETENIDO;
-        break;
+        if(a > this.umbArranque()) sig=S.ARRANCANDO; break;
+      case S.ARRANCANDO:
+        if(a < this.umbFrenada()) sig=S.FRENANDO;
+        else if(asentado && !hayDin) sig=S.EN_MARCHA; break;
+      case S.EN_MARCHA:
+        if(a < this.umbFrenada()) sig=S.FRENANDO;
+        else if(quieto) sig=S.DETENIDO; break;
       case S.FRENANDO:
-        if(quieto) next = S.DETENIDO;
-        else if(asentado && a > CFG.thCruise) next = S.MARCHA;
-        break;
+        if(quieto) sig=S.DETENIDO;
+        else if(asentado && a>this.umbArranque()) sig=S.ARRANCANDO;
+        else if(asentado && !hayDin) sig=S.EN_MARCHA; break;
     }
 
-    if(next !== this.state && (asentado || next === S.ACELERANDO)){
-      const prev = this.state;
-      this.state = next; this.stateAt = now;
+    if(enMov(this.estado)) this.vib.aprenderMarcha(dt);
+    else this.vib.aprenderReposo(dt);
 
-      if(next === S.ACELERANDO) this.onEvent && this.onEvent('arranque');
-      if(next === S.FRENANDO)   this.onEvent && this.onEvent('frenada');
-      if(next === S.DETENIDO && prev !== S.DETENIDO){
-        // El eje se libera recién acá: durante el viaje hace falta, y en la
-        // parada el pasajero pudo mover el teléfono. Se vuelve a fijar en el
-        // próximo arranque.
-        this.axis = null;
-        this.onEvent && this.onEvent('parada');
+    if(sig!==this.estado && (asentado || sig===S.ARRANCANDO)){
+      const prev=this.estado;
+      this.estado=sig; this.tEstado=t;
+      this.onEvent({tipo:'estado', desde:prev, hacia:sig, t,
+                    accel:a, vib:this.vib.env.v, conf:this.confianza()});
+    }
+  }
+
+  confianza(){
+    if(!this.calibrado) return 0;
+    const pe=Math.max(0,Math.min(1,(this.eje.calidad-0.5)/0.4));
+    return 0.6*pe + 0.4*this.vib.confianza();
+  }
+}
+</script>
+<script>
+/* ==========================================================================
+   SELECTOR DE FUENTE  ·  GPS  vs  ACELERÓMETRO
+   --------------------------------------------------------------------------
+   El acelerómetro nunca da posición absoluta: solo dice si el vehículo se
+   mueve, y la posición sale de interpolar contra el horario. El GPS sí da
+   posición absoluta y no acumula deriva. Donde hay GPS, no hay razón para
+   adivinar.
+
+   Este módulo decide, muestra a muestra, cuál de las dos fuentes manda —
+   y registra SIEMPRE lo que habría dicho la otra, para poder comparar
+   después contra verdad de campo.
+   ========================================================================== */
+
+const GCFG = {
+  // --- Calidad del fix ---
+  precBuena:      12,    // m: por debajo de esto, confianza plena
+  precAceptable:  30,    // m
+  precMala:       60,    // m: por arriba, el fix casi no vale
+  edadTolerada:   2.5,   // s sin fix nuevo antes de empezar a descontar (el GPS da ~1/s)
+  edadMedia:      4.0,   // s: constante de decaimiento por antigüedad
+  velImposible:   45,    // m/s: ningún tren del AMBA se mueve así
+  desvioBueno:    40,    // m del eje de la vía
+  desvioMalo:     250,   // m: más que esto es rebote o fix viejo
+
+  // --- Histéresis del selector ---
+  umbralEntrarGps: 0.60,
+  umbralSalirGps:  0.30,
+  sostenidoS:      3.0,  // s que hay que aguantar antes de cambiar
+
+  // --- Movimiento según GPS ---
+  velDetenido:    1.5,   // m/s
+  velEnMarcha:    3.0,   // m/s
+  tauVel:         2.0,   // s de suavizado de la velocidad
+
+  // --- Llegada a estación por proximidad ---
+  radioEstacion:  70,    // m
+};
+
+const R_TIERRA = 6371000;
+const rad = g => g * Math.PI / 180;
+
+function haversine(la1, lo1, la2, lo2){
+  const dLa = rad(la2 - la1), dLo = rad(lo2 - lo1);
+  const a = Math.sin(dLa/2)**2
+          + Math.cos(rad(la1)) * Math.cos(rad(la2)) * Math.sin(dLo/2)**2;
+  return 2 * R_TIERRA * Math.asin(Math.min(1, Math.sqrt(a)));
+}
+
+/* --------------------------------------------------------------------------
+   RouteGeometry — el recorrido como la polilínea REAL de la vía (shapes del
+   GTFS), no como rectas entre estaciones. La diferencia importa: en el Mitre,
+   unir estaciones con rectas daba 165 m de desvío mediano contra fixes que en
+   realidad eran buenos, y eso hundía la confianza del GPS sin motivo.
+
+   Trabaja en metros locales (plano tangente): a esta escala el error de
+   aplanar la Tierra es despreciable y la matemática es mucho más simple.
+   -------------------------------------------------------------------------- */
+class RouteGeometry {
+  constructor(sentido){
+    this.est = sentido.est;
+    this.via = sentido.via || null;
+    this.ok  = !!(this.via && this.via.length > 1
+                  && this.est.every(e => e.s != null));
+    if(!this.ok) return;
+
+    const la0 = this.via[0][0], lo0 = this.via[0][1];
+    this.lat0 = la0; this.lon0 = lo0;
+    this.mLat = 111320;
+    this.mLon = 111320 * Math.cos(rad(la0));
+
+    // Vía en metros locales + distancia acumulada sobre ella
+    this.P = this.via.map(p => ({x:(p[1]-lo0)*this.mLon, y:(p[0]-la0)*this.mLat}));
+    this.acum = [0]; this.segL = [];
+    for(let i=1;i<this.P.length;i++){
+      const L = Math.hypot(this.P[i].x-this.P[i-1].x, this.P[i].y-this.P[i-1].y);
+      this.segL.push(L); this.acum.push(this.acum[i-1]+L);
+    }
+    this.total = this.acum[this.acum.length-1];
+    this.sEst  = this.est.map(e => e.s);   // metros sobre la vía de cada estación
+  }
+
+  /* Proyecta un punto sobre la vía: devuelve dónde cae (en metros sobre la vía
+     y como estación + fracción) y cuánto se desvía del eje — que es la señal
+     más fuerte para saber si el fix es creíble. */
+  proyectar(lat, lon){
+    if(!this.ok) return null;
+    const x = (lon - this.lon0) * this.mLon;
+    const y = (lat - this.lat0) * this.mLat;
+
+    let dMin = Infinity, sVia = 0;
+    for(let i=0;i<this.P.length-1;i++){
+      const a=this.P[i], b=this.P[i+1];
+      const dx=b.x-a.x, dy=b.y-a.y, L2=dx*dx+dy*dy;
+      if(L2===0) continue;
+      let t = ((x-a.x)*dx + (y-a.y)*dy) / L2;
+      t = Math.max(0, Math.min(1, t));
+      const d = Math.hypot(x-(a.x+t*dx), y-(a.y+t*dy));
+      if(d < dMin){ dMin = d; sVia = this.acum[i] + t*this.segL[i]; }
+    }
+
+    // De metros sobre la vía a estación + fracción del tramo
+    let i = 0;
+    while(i < this.sEst.length-2 && sVia >= this.sEst[i+1]) i++;
+    const L = this.sEst[i+1] - this.sEst[i];
+    const frac = L > 0 ? Math.max(0, Math.min(1, (sVia - this.sEst[i]) / L)) : 0;
+
+    // Estación más cercana medida SOBRE la vía. En línea recta miente en las
+    // curvas y con las estaciones que quedan enfrentadas del otro lado.
+    let iEst=0, dEst=Infinity;
+    for(let k=0;k<this.sEst.length;k++){
+      const d = Math.abs(sVia - this.sEst[k]);
+      if(d < dEst){ dEst = d; iEst = k; }
+    }
+
+    return {sVia, desvioM: dMin, idxSeg: i, frac,
+            estCercana: iEst, distEstacionM: dEst};
+  }
+}
+
+/* --------------------------------------------------------------------------
+   GpsQuality — cuánto se le puede creer al GPS en este instante.
+   Cuatro señales independientes, multiplicadas. Cualquiera que se caiga
+   arrastra la confianza para abajo, que es el comportamiento que queremos:
+   basta un motivo para desconfiar.
+   -------------------------------------------------------------------------- */
+class GpsQuality {
+  constructor(){
+    this.conf = 0;
+    this.ultFix = null;      // {t, lat, lon, acc}
+    this.tUltFix = -1e9;
+    this.motivo = 'sin fix';
+    this.saltoDetectado = false;
+  }
+
+  /* Se llama con cada fix nuevo */
+  nuevoFix(tS, lat, lon, acc, proy){
+    const prev = this.ultFix;
+    this.saltoDetectado = false;
+
+    // (1) Precisión reportada por el sistema
+    let fPrec;
+    if(acc == null)                    fPrec = 0.3;
+    else if(acc <= GCFG.precBuena)     fPrec = 1.0;
+    else if(acc <= GCFG.precAceptable) fPrec = 1.0 - 0.3*(acc - GCFG.precBuena)/(GCFG.precAceptable - GCFG.precBuena);
+    else if(acc <= GCFG.precMala)      fPrec = 0.7 - 0.6*(acc - GCFG.precAceptable)/(GCFG.precMala - GCFG.precAceptable);
+    else                               fPrec = Math.max(0.02, 0.1 * GCFG.precMala / acc);
+
+    // (2) Salto físicamente imposible entre fixes consecutivos.
+    //     Típico del multipath entre edificios o de un fix viejo que se
+    //     libera de golpe al salir del túnel.
+    let fSalto = 1.0;
+    if(prev){
+      const dt = Math.max(0.2, tS - prev.t);
+      const d  = haversine(prev.lat, prev.lon, lat, lon);
+      const v  = d / dt;
+      if(v > GCFG.velImposible){
+        fSalto = Math.max(0.05, GCFG.velImposible / v);
+        this.saltoDetectado = true;
       }
     }
+
+    // (3) Desvío del eje del recorrido. Es la validación más fuerte que
+    //     tenemos: sabemos por dónde va la vía, así que un fix a 300 m
+    //     de ella está mal aunque el sistema jure que tiene 8 m de precisión.
+    let fDesvio = 1.0;
+    if(proy){
+      const d = proy.desvioM;
+      if(d <= GCFG.desvioBueno)      fDesvio = 1.0;
+      else if(d <= GCFG.desvioMalo)  fDesvio = 1.0 - 0.85*(d - GCFG.desvioBueno)/(GCFG.desvioMalo - GCFG.desvioBueno);
+      else                           fDesvio = 0.1;
+    }
+
+    this.ultFix = {t: tS, lat, lon, acc};
+    this.tUltFix = tS;
+    this.base = fPrec * fSalto * fDesvio;
+    this.fPrec = fPrec; this.fSalto = fSalto; this.fDesvio = fDesvio;
+
+    this.motivo = fDesvio < 0.5 ? 'lejos de la vía'
+                : fSalto  < 0.5 ? 'salto imposible'
+                : fPrec   < 0.5 ? 'precisión pobre' : 'ok';
+    return this.evaluar(tS);
+  }
+
+  /* Se llama en cada tick, aunque no haya fix nuevo. Acá es donde el túnel
+     hace efecto: sin fixes nuevos la confianza se derrumbe sola. */
+  evaluar(tS){
+    if(this.ultFix == null){ this.conf = 0; this.motivo = 'sin fix'; return 0; }
+    const edad = tS - this.tUltFix;
+    let fEdad = 1.0;
+    if(edad > GCFG.edadTolerada)
+      fEdad = Math.exp(-(edad - GCFG.edadTolerada) / GCFG.edadMedia);
+    this.fEdad = fEdad;
+    this.edadS = edad;
+    if(fEdad < 0.5 && this.motivo === 'ok') this.motivo = 'fix viejo';
+    this.conf = Math.max(0, Math.min(1, (this.base || 0) * fEdad));
+    return this.conf;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   GpsMotion — estado de movimiento derivado del GPS.
+   Prefiere la velocidad que reporta el sistema; si no viene, la calcula
+   por diferencia de posición.
+   -------------------------------------------------------------------------- */
+class GpsMotion {
+  constructor(){ this.v = 0; this.estado = 'DESCONOCIDO'; this.prev = null; }
+
+  nuevoFix(tS, lat, lon, speed){
+    let v = null;
+    if(speed != null && speed >= 0) v = speed;
+    else if(this.prev){
+      const dt = Math.max(0.2, tS - this.prev.t);
+      v = haversine(this.prev.lat, this.prev.lon, lat, lon) / dt;
+    }
+    if(v != null){
+      const dt = this.prev ? Math.max(0.05, tS - this.prev.t) : 1;
+      const a  = 1 - Math.exp(-dt / GCFG.tauVel);
+      this.v   = this.prev ? this.v + a*(v - this.v) : v;
+    }
+    this.prev = {t: tS, lat, lon};
+
+    // Histéresis simple: no cambia de estado en la zona intermedia
+    if(this.v > GCFG.velEnMarcha)      this.estado = 'EN_MARCHA';
+    else if(this.v < GCFG.velDetenido) this.estado = 'DETENIDO';
+    return this.estado;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   SourceSelector — decide quién manda, con histéresis.
+   Arranca siempre en ACC: el GPS tiene que ganarse el turno demostrando
+   calidad sostenida, no al revés. En el subte nunca la va a demostrar, y
+   está bien que así sea.
+   -------------------------------------------------------------------------- */
+class SourceSelector {
+  constructor(){
+    this.fuente = 'ACC';
+    this.desde  = 0;
+    this.tCandidato = null;
+    this.candidato  = null;
+    this.cambios = [];
+  }
+
+  actualizar(tS, confGps){
+    const quiere = this.fuente === 'ACC'
+      ? (confGps >= GCFG.umbralEntrarGps ? 'GPS' : 'ACC')
+      : (confGps <= GCFG.umbralSalirGps  ? 'ACC' : 'GPS');
+
+    if(quiere === this.fuente){ this.candidato = null; this.tCandidato = null; }
+    else {
+      if(this.candidato !== quiere){ this.candidato = quiere; this.tCandidato = tS; }
+      else if(tS - this.tCandidato >= GCFG.sostenidoS){
+        const antes = this.fuente;
+        this.fuente = quiere; this.desde = tS;
+        this.candidato = null; this.tCandidato = null;
+        this.cambios.push({tS: +tS.toFixed(2), de: antes, a: this.fuente,
+                           conf: +confGps.toFixed(3)});
+        if(this.onCambio) this.onCambio(antes, this.fuente, confGps);
+      }
+    }
+
+    // Etiqueta informativa: el GPS puede estar mandando pero flojo
+    this.modo = this.fuente === 'GPS'
+      ? (confGps >= GCFG.umbralEntrarGps ? 'GPS' : 'GPS_DEGRADADO')
+      : (confGps >= GCFG.umbralSalirGps  ? 'ACC_CON_GPS_DUDOSO' : 'ACC');
+    return this.fuente;
   }
 }
 </script>
@@ -369,255 +755,436 @@ class Detector {
    APLICACIÓN
    ========================================================================== */
 const $ = id => document.getElementById(id);
+let stations=[], idx=0, linea='B', dir=0, acumGtfs=[];
+let det=null, running=false, wakeLock=null, watchId=null;
+let t0=0, correcciones=0, marcas=0;
+let modoLinear=true;
+const eventos=[], rawAcc=[], rawGps=[];
+const MAX=600000;
 
-let stations = [], idx = 0, linea = 'MITRE', dir = 0;
-let det = null, running = false, wakeLock = null, watchId = null;
-let departedAt = null, correcciones = 0, t0 = 0;
-const eventos = [];
+// Estado del progreso por acelerómetro: NO integra nada. Interpola con el GTFS.
+let enTramo=false, segMoviendo=0, segDesdeSalida=0, tUltTick=0;
 
-/* Buffers crudos. Esto es lo que permite diagnosticar después: si el
-   detector no dispara, en el registro de eventos no queda nada, pero en las
-   muestras crudas está todo. */
-const rawAcc = [];   // [t, ax, ay, az, accelProyectada, vibracion, estado]
-const rawGps = [];   // [t, lat, lon, precisionM, velocidad]
-const MAX_MUESTRAS = 400000;   // ~1.8 h a 60 Hz
+// Sensores extra
+let brujula=null, giro={a:0,b:0,g:0};
+
+/* --- Selector de fuente --- */
+let geo=null, gq=null, gm=null, sel=null;
+let ultProy=null, tUltSel=0;
+let progAccM=0, progGpsM=null, discrepM=null;
+let idxGps=null;                 // estación que cree el GPS
+let cercaDesde=null, lejosDesde=null;
+let llegadasAcc=0, llegadasGps=0;
 
 /* ---------- Setup ---------- */
 function fillSentidos(){
-  linea = $('linea').value;
-  const L = LINEAS[linea];
-  $('dir').innerHTML = L.sentidos
-    .map((s,i) => `<option value="${i}">Hacia ${s.hacia}</option>`).join('');
+  const L=LINEAS[$('linea').value];
+  $('dir').innerHTML=L.sentidos.map((s,i)=>`<option value="${i}">Hacia ${s.hacia}</option>`).join('');
   fillEstaciones();
 }
 function fillEstaciones(){
-  dir = +$('dir').value;
-  stations = LINEAS[linea].sentidos[dir].est;
-  $('from').innerHTML = stations
-    .map((s,i) => `<option value="${i}">${s.n}</option>`).join('');
+  const L=LINEAS[$('linea').value], d=+$('dir').value;
+  $('from').innerHTML=L.sentidos[d].est.map((e,i)=>`<option value="${i}">${e.n}</option>`).join('');
 }
-$('linea').addEventListener('change', fillSentidos);
-$('dir').addEventListener('change', fillEstaciones);
+$('linea').onchange=fillSentidos; $('dir').onchange=fillEstaciones;
 fillSentidos();
 
-/* ---------- Registro ---------- */
-function log(msg, tipo='info'){
-  const t = new Date();
-  eventos.push({hora:t.toISOString(), tMs: Math.round(performance.now()-t0),
-                tipo, msg, estacion: stations[idx]?.n, idx});
-  $('log').textContent = `${t.toTimeString().slice(0,8)}  ${msg}\n`
-                       + $('log').textContent;
+function log(msg,tipo='info'){
+  const t=((performance.now()-t0)/1000).toFixed(1);
+  eventos.push({t:+t,tipo,msg});
+  const d=document.createElement('div');
+  d.className='ev '+tipo;
+  d.innerHTML=`<b>${t}s</b> ${msg}`;
+  $('log').prepend(d);
 }
 
 /* ---------- Render ---------- */
 function render(){
-  $('list').innerHTML = stations.map((s,i) => {
-    const cls = i < idx ? 'done' : (i === idx ? 'now' : '');
-    const meta = (i > 0 && s.t) ? `${s.t}s · ${s.d}m` : '';
-    return `<li class="${cls}"><span class="pin"></span>${s.n}<span class="meta">${meta}</span></li>`;
+  $('list').innerHTML = stations.map((s,i)=>{
+    let c = i<idx?'done':(i===idx?'now':'');
+    if(idxGps!=null && i===idxGps && i!==idx) c+=' gps';
+    const m = (i>0&&s.t)?`${s.t}s · ${s.d}m`:'';
+    return `<li class="${c}"><span class="pin"></span>${s.n}<span class="meta">${m}</span></li>`;
   }).join('');
-  const n = $('list').querySelector('.now');
-  n && n.scrollIntoView({block:'center', behavior:'smooth'});
-  const prox = stations[idx+1];
-  $('segInfo').textContent = prox
-    ? `Próxima: ${prox.n} — ${prox.d} m, ${prox.t} s programados`
-    : 'Fin del recorrido';
+  const n=$('list').querySelector('.now');
+  n && n.scrollIntoView({block:'center',behavior:'smooth'});
+  const p=stations[idx+1];
+  $('segInfo').textContent = p ? `Próxima: ${p.n} — ${p.d} m, ${p.t} s programados`
+                               : 'Fin del recorrido';
 }
 
 function renderState(){
   if(!det) return;
-  $('dot').className = 'dot ' + (det.state !== S.DETENIDO ? 'mv' : 'st');
-  const desc = {
-    [S.DETENIDO]:'En estación o detenido', [S.ACELERANDO]:'Saliendo',
-    [S.MARCHA]:'Velocidad de crucero',     [S.FRENANDO]:'Llegando'
-  };
-  $('stName').textContent = det.state;
-  $('stDesc').textContent = desc[det.state];
-  $('mAcc').textContent  = det.accel.toFixed(2);
-  $('mVib').textContent  = det.vib.toFixed(3);
-  $('mHz').textContent   = Math.round(det.hz) + ' Hz';
-  $('mAxis').textContent = det.axis ? 'sí' : 'no';
-  $('mN').textContent    = rawAcc.length.toLocaleString('es-AR');
-  $('mG').textContent    = rawGps.length;
+  const mov=enMov(det.estado);
+  $('dot').className='dot '+(mov?'mv':'st');
+  const desc={[S.DETENIDO]:'En estación o detenido',[S.ARRANCANDO]:'Saliendo',
+              [S.EN_MARCHA]:'En marcha',[S.FRENANDO]:'Frenando'};
+  $('stName').textContent=det.estado;
+  $('stDesc').textContent=desc[det.estado]||'';
 
-  const prox = stations[idx+1];
-  $('segBar').style.width = (departedAt && prox && prox.t)
-    ? Math.min(100,(Date.now()-departedAt)/1000/prox.t*100) + '%' : '0%';
+  $('mAcc').textContent=det.accel.toFixed(2);
+  $('mUmb').textContent=det.calibrado?det.umbArranque().toFixed(2):'calib…';
+  $('mVib').textContent=det.vib.env.v.toFixed(3);
+  $('mEje').textContent=(det.eje.calidad*100).toFixed(0)+'%';
+  $('mHz').textContent=Math.round(det.vib.hz)+' Hz';
+  $('mBru').textContent=brujula!==null?Math.round(brujula)+'°':'—';
+  $('mN').textContent=rawAcc.length.toLocaleString('es-AR');
+  $('mG').textContent=rawGps.length;
 
-  $('calNote').textContent =
-    `Umbral de arranque ${CFG.thStart} · frenada ${CFG.thBrake} · `
-  + `vibración ${det.umbralVib.toFixed(3)} (adaptativo)`;
+  // --- Fuente activa ---
+  const f=sel?sel.fuente:'ACC';
+  const cf=gq?gq.conf:0;
+  $('srcName').textContent = f==='GPS' ? 'GPS' : 'ACELERÓMETRO';
+  $('srcCard').className = 'card src '+(f==='GPS'?'esGps':'esAcc');
+  $('srcWhy').textContent = f==='GPS'
+    ? `posición absoluta · ${gm&&gm.v!=null?gm.v.toFixed(1):'—'} m/s`
+    : (gq&&gq.ultFix ? `GPS descartado: ${gq.motivo}` : 'sin fix de GPS todavía');
+  $('gConf').textContent=(cf*100).toFixed(0)+'%';
+  $('gConfBar').style.width=(cf*100)+'%';
+  $('gPrec').textContent = gq&&gq.ultFix&&gq.ultFix.acc!=null
+    ? Math.round(gq.ultFix.acc)+' m' : '—';
+  $('gEdad').textContent = gq&&gq.edadS!=null ? gq.edadS.toFixed(1)+' s' : '—';
+  $('gDesv').textContent = ultProy ? Math.round(ultProy.desvioM)+' m' : '—';
+  $('gVel').textContent  = gm&&gm.prev ? (gm.v*3.6).toFixed(0)+' km/h' : '—';
+  $('gDisc').textContent = discrepM!=null ? Math.round(discrepM)+' m' : '—';
+  $('gDisc').style.color = discrepM==null ? '' :
+      (discrepM<150?'#22c55e':(discrepM<400?'#eab308':'#ef4444'));
+  $('gEst').textContent  = idxGps!=null ? stations[idxGps].n : '—';
+
+  // Marcador: avanza por tiempo, no por integración.
+  const prox=stations[idx+1];
+  if(enTramo && prox && prox.t){
+    $('segBar').style.width = Math.min(97, segMoviendo/prox.t*100)+'%';
+  } else $('segBar').style.width='0%';
+
+  const c=det.confianza();
+  $('confBar').style.width=(c*100)+'%';
+  $('confTxt').textContent = `Confianza del detector ${(c*100).toFixed(0)}% · `
+    + (modoLinear?'aceleración lineal':'⚠ modo crudo, sin giroscopio')
+    + (det.yaEnMarcha?' · arrancó en movimiento':'');
 }
 
-/* ---------- Avance de estación ---------- */
-function onDetectorEvent(tipo){
-  if(tipo === 'arranque'){
-    departedAt = Date.now();
-    log(`Arrancó desde ${stations[idx].n}`, 'arranque');
-  }
-  if(tipo === 'frenada') log('Frenando', 'frenada');
-  if(tipo === 'parada'){
-    const prox = stations[idx+1];
-    if(!prox){ log('Fin del recorrido'); return; }
-    const transcurrido = departedAt ? (Date.now()-departedAt)/1000 : 0;
-    const esperado = prox.t || 120;
+/* ---------- Progresos comparables ----------
+   Los dos se expresan en metros acumulados del GTFS para que la diferencia
+   signifique algo. El del acelerómetro sale de interpolar el tiempo; el del
+   GPS, de proyectar la posición sobre el recorrido.                        */
+function calcularProgresos(){
+  const prox=stations[idx+1];
+  let fr=0;
+  if(enTramo && prox && prox.t) fr=Math.min(1, segMoviendo/prox.t);
+  progAccM = acumGtfs[idx] + (prox ? (prox.d||0)*fr : 0);
 
-    // Verificación temporal: si frenó demasiado pronto para el tramo
-    // programado, no es la estación. Protege del error de conteo sin
-    // necesidad de integrar nada.
-    if(transcurrido < esperado * CFG.minSegRatio){
-      log(`Parada a los ${Math.round(transcurrido)}s (esperado ${esperado}s) `
-        + `→ no avanzo, probable parada intermedia`, 'intermedia');
+  if(ultProy && geo && geo.ok){
+    const i=ultProy.idxSeg, sig=stations[i+1];
+    progGpsM = acumGtfs[i] + (sig ? (sig.d||0)*ultProy.frac : 0);
+    discrepM = Math.abs(progGpsM - progAccM);
+  }
+}
+
+/* ---------- Bucle ---------- */
+function tick(){
+  if(!running) return;
+  const t=performance.now();
+  const dt=(t-tUltTick)/1000; tUltTick=t;
+  if(enTramo){
+    segDesdeSalida+=dt;
+    if(enMov(det.estado)) segMoviendo+=dt;
+  }
+
+  // El selector se reevalúa 4 veces por segundo: alcanza y no cuesta nada.
+  if(t-tUltSel>250){
+    tUltSel=t;
+    const tS=(t-t0)/1000;
+    const conf=gq.evaluar(tS);
+    sel.actualizar(tS, conf);
+    calcularProgresos();
+  }
+
+  renderState();
+  requestAnimationFrame(tick);
+}
+
+/* ---------- Eventos del acelerómetro ----------
+   Ojo: si la fuente activa es el GPS, el detector SIGUE corriendo y sus
+   eventos se registran, pero no mueven el marcador. Esa es toda la gracia:
+   así se puede medir después cuánto se habría equivocado.                 */
+function onEvento(e){
+  const mandaAcc = !sel || sel.fuente==='ACC';
+
+  if(e.tipo==='yaEnMarcha'){
+    log('Arrancó con el viaje YA empezado — confirmá la estación','aviso');
+    if(mandaAcc){ enTramo=true; segMoviendo=0; segDesdeSalida=0; }
+    return;
+  }
+  if(e.tipo!=='estado') return;
+
+  if(e.hacia===S.ARRANCANDO){
+    if(!enTramo){ enTramo=true; segMoviendo=0; segDesdeSalida=0; }
+    log(`ACC: arranque desde ${stations[idx].n} (a=${e.accel.toFixed(3)} conf=${e.conf.toFixed(2)})`,
+        mandaAcc?'arranque':'sombra');
+  }
+  if(e.hacia===S.FRENANDO)
+    log(`ACC: frenando (a=${e.accel.toFixed(3)})`, mandaAcc?'frenada':'sombra');
+
+  if(e.hacia===S.DETENIDO){
+    const prox=stations[idx+1];
+    if(!prox){ log('Fin del recorrido'); return; }
+    const prog=prox.t||120;
+    if(segMoviendo < prog*CFG.fraccionMinTramo){
+      log(`ACC: detención a los ${segMoviendo.toFixed(0)}s (esperado ${prog}s) → intermedia`,
+          'intermedia');
       return;
     }
-    idx++;
-    const demora = Math.round(transcurrido - esperado);
-    log(`Llegó a ${stations[idx].n} en ${Math.round(transcurrido)}s`
-      + (demora > 15 ? ` — ${demora}s de demora` : ''), 'llegada');
-    departedAt = null;
-    render();
+    if(!mandaAcc){
+      log(`ACC: habría marcado llegada a ${prox.n} (${segDesdeSalida.toFixed(0)}s) — no manda`,'sombra');
+      return;
+    }
+    llegadasAcc++;
+    avanzar('ACC', segDesdeSalida, prog);
   }
 }
 
-/* ---------- GPS ---------- */
+function avanzar(fuente, dur, prog){
+  idx++;
+  const dem=Math.round(dur-prog);
+  log(`${fuente}: LLEGADA a ${stations[idx].n} en ${dur.toFixed(0)}s`
+      + (dem>45?` — demora ${dem}s`:''),'llegada');
+  enTramo=false; segMoviendo=0; segDesdeSalida=0;
+  cercaDesde=null; lejosDesde=null;
+  render();
+}
+
+/* ---------- Llegadas y salidas según GPS ----------
+   Criterio: estar dentro del radio de la estación siguiente Y con velocidad
+   de detenido, sostenido un par de segundos. La proximidad sola no alcanza:
+   el tren pasa cerca de estaciones sin frenar en algunos ramales.          */
+function evaluarGps(tS){
+  if(!sel || sel.fuente!=='GPS' || !ultProy) return;
+  const prox=stations[idx+1];
+  if(!prox) return;
+
+  const enEstProx = ultProy.estCercana===idx+1
+                 && ultProy.distEstacionM < GCFG.radioEstacion;
+  const quieto = gm.estado==='DETENIDO';
+
+  if(enEstProx && quieto){
+    if(cercaDesde==null) cercaDesde=tS;
+    else if(tS-cercaDesde > 2.0){
+      llegadasGps++;
+      avanzar('GPS', segDesdeSalida, prox.t||120);
+    }
+  } else cercaDesde=null;
+
+  // Salida: se aleja de la estación actual y toma velocidad
+  if(!enTramo && ultProy.estCercana===idx
+     && ultProy.distEstacionM > GCFG.radioEstacion*1.7
+     && gm.estado==='EN_MARCHA'){
+    if(lejosDesde==null) lejosDesde=tS;
+    else if(tS-lejosDesde > 1.5){
+      enTramo=true; segMoviendo=0; segDesdeSalida=0; lejosDesde=null;
+      log(`GPS: salida de ${stations[idx].n}`,'arranque');
+    }
+  } else if(enTramo) lejosDesde=null;
+}
+
+/* ---------- Sensores ---------- */
+function startOrientation(){
+  const h=e=>{ if(e.webkitCompassHeading!=null) brujula=e.webkitCompassHeading;
+               else if(e.alpha!=null) brujula=360-e.alpha; };
+  if(typeof DeviceOrientationEvent!=='undefined'
+     && typeof DeviceOrientationEvent.requestPermission==='function'){
+    DeviceOrientationEvent.requestPermission()
+      .then(r=>{ if(r==='granted') window.addEventListener('deviceorientation',h); })
+      .catch(()=>{});
+  } else window.addEventListener('deviceorientation',h);
+}
+
 function startGps(){
-  if(!navigator.geolocation){ $('gpsNote').textContent = 'GPS no disponible'; return; }
-  watchId = navigator.geolocation.watchPosition(
-    p => {
-      rawGps.push([
-        Math.round(performance.now()-t0),
-        +p.coords.latitude.toFixed(6), +p.coords.longitude.toFixed(6),
-        p.coords.accuracy != null ? +p.coords.accuracy.toFixed(1) : '',
-        p.coords.speed != null ? +p.coords.speed.toFixed(2) : ''
-      ]);
-      $('gpsNote').textContent =
-        `GPS activo — precisión ${Math.round(p.coords.accuracy)} m`;
-    },
-    e => { $('gpsNote').textContent = 'GPS: ' + e.message; },
-    {enableHighAccuracy:true, maximumAge:0, timeout:15000}
-  );
+  if(!navigator.geolocation){ $('gpsNote').textContent='GPS no disponible'; return; }
+  watchId=navigator.geolocation.watchPosition(p=>{
+    const tS=(performance.now()-t0)/1000;
+    const la=p.coords.latitude, lo=p.coords.longitude;
+    const acc=p.coords.accuracy;
+
+    ultProy = geo && geo.ok ? geo.proyectar(la,lo) : null;
+    const conf = gq.nuevoFix(tS, la, lo, acc, ultProy);
+    gm.nuevoFix(tS, la, lo, p.coords.speed);
+    sel.actualizar(tS, conf);
+    idxGps = ultProy ? ultProy.estCercana : null;
+    calcularProgresos();
+    evaluarGps(tS);
+
+    rawGps.push([Math.round(tS*1000),
+      +la.toFixed(6), +lo.toFixed(6),
+      acc!=null?+acc.toFixed(1):'',
+      p.coords.speed!=null?+p.coords.speed.toFixed(2):'',
+      p.coords.heading!=null?+p.coords.heading.toFixed(1):'',
+      +conf.toFixed(3),
+      ultProy?+ultProy.desvioM.toFixed(1):'',
+      ultProy?ultProy.idxSeg:'',
+      ultProy?+ultProy.frac.toFixed(4):'',
+      ultProy?+ultProy.distEstacionM.toFixed(1):'',
+      idxGps!=null?idxGps:'',
+      progGpsM!=null?Math.round(progGpsM):'',
+      Math.round(progAccM),
+      discrepM!=null?Math.round(discrepM):'',
+      sel.fuente, gq.motivo, gm.estado, det?det.estado:'']);
+
+    $('gpsNote').textContent =
+      `GPS ${Math.round(acc)} m · confianza ${(conf*100).toFixed(0)}% · ${gq.motivo}`;
+  }, e=>{ $('gpsNote').textContent='GPS: '+e.message; },
+     {enableHighAccuracy:true,maximumAge:0,timeout:15000});
 }
 
 /* ---------- Arranque ---------- */
 async function start(){
   $('err').classList.add('hide');
-  if(typeof DeviceMotionEvent === 'undefined'){
-    return fail('Este navegador no expone el acelerómetro.');
-  }
-  if(typeof DeviceMotionEvent.requestPermission === 'function'){
+  if(typeof DeviceMotionEvent==='undefined') return fail('Sin acelerómetro.');
+  if(typeof DeviceMotionEvent.requestPermission==='function'){
     try{
-      if(await DeviceMotionEvent.requestPermission() !== 'granted')
-        return fail('Permiso denegado. Recargá y aceptá el acceso al movimiento.');
-    }catch(e){
-      return fail('No se pudo pedir permiso: la página tiene que estar en HTTPS.');
-    }
+      if(await DeviceMotionEvent.requestPermission()!=='granted')
+        return fail('Permiso de movimiento denegado. Recargá y aceptá.');
+    }catch(e){ return fail('La página tiene que estar servida por HTTPS.'); }
   }
 
-  linea = $('linea').value; dir = +$('dir').value; idx = +$('from').value;
-  stations = LINEAS[linea].sentidos[dir].est;
-  t0 = performance.now();
+  linea=$('linea').value; dir=+$('dir').value; idx=+$('from').value;
+  stations=LINEAS[linea].sentidos[dir].est;
 
-  det = new Detector();
-  det.onEvent = onDetectorEvent;
+  // Distancia acumulada del GTFS, para poder comparar los dos progresos
+  acumGtfs=[0];
+  for(let i=1;i<stations.length;i++) acumGtfs.push(acumGtfs[i-1]+(stations[i].d||0));
 
-  let got = false;
-  window.addEventListener('devicemotion', ev => {
-    const a = ev.acceleration && ev.acceleration.x !== null ? ev.acceleration : null;
-    if(!a) return;
-    got = true;
-    const t = performance.now();
-    det.push(a.x||0, a.y||0, a.z||0, t);
-    if(rawAcc.length < MAX_MUESTRAS){
-      rawAcc.push([Math.round(t-t0), +(a.x||0).toFixed(4), +(a.y||0).toFixed(4),
-                   +(a.z||0).toFixed(4), +det.accel.toFixed(4),
-                   +det.vib.toFixed(4), det.state]);
+  geo=new RouteGeometry(LINEAS[linea].sentidos[dir]);
+  gq=new GpsQuality(); gm=new GpsMotion(); sel=new SourceSelector();
+  sel.onCambio=(de,a,c)=>{
+    log(`FUENTE: ${de} → ${a} (confianza GPS ${(c*100).toFixed(0)}%${a==='ACC'?', '+gq.motivo:''})`,'fuente');
+  };
+
+  t0=performance.now(); tUltTick=t0; tUltSel=t0;
+
+  det=new MotionDetector();
+  det.onEvent=onEvento;
+
+  let got=false;
+  window.addEventListener('devicemotion', ev=>{
+    // Preferimos la aceleración lineal: el sistema la calcula con el
+    // giroscopio, que es la única forma correcta de separar gravedad de
+    // aceleración sostenida. Sin él son indistinguibles.
+    const lin = ev.acceleration && ev.acceleration.x!==null;
+    const src = lin ? ev.acceleration : ev.accelerationIncludingGravity;
+    if(!src || src.x===null) return;
+    modoLinear = lin;
+    got=true;
+
+    const t=performance.now();
+    const rr = ev.rotationRate || {alpha:null,beta:null,gamma:null};
+    giro = {a:rr.alpha, b:rr.beta, g:rr.gamma};
+
+    det.push(src.x||0, src.y||0, src.z||0, t, lin);
+
+    if(rawAcc.length<MAX){
+      rawAcc.push([Math.round(t-t0),
+        +(src.x||0).toFixed(4), +(src.y||0).toFixed(4), +(src.z||0).toFixed(4),
+        lin?1:0,
+        rr.alpha!=null?+rr.alpha.toFixed(3):'',
+        rr.beta !=null?+rr.beta.toFixed(3):'',
+        rr.gamma!=null?+rr.gamma.toFixed(3):'',
+        brujula!=null?+brujula.toFixed(1):'',
+        +det.accel.toFixed(4), +det.vib.env.v.toFixed(4),
+        +det.eje.calidad.toFixed(3), det.estado,
+        sel?sel.fuente:'', gq?+gq.conf.toFixed(3):'',
+        Math.round(progAccM), progGpsM!=null?Math.round(progGpsM):'',
+        discrepM!=null?Math.round(discrepM):'']);
     }
   });
-  setTimeout(() => { if(!got) fail(
-    'No llegan datos del acelerómetro. Verificá HTTPS y '
-  + 'Ajustes → Safari → Movimiento y orientación.'); }, 2500);
 
-  startGps();
-  try{ wakeLock = await navigator.wakeLock.request('screen'); }catch(e){}
+  setTimeout(()=>{ if(!got) fail('No llegan datos del acelerómetro. '
+    +'Verificá HTTPS y Ajustes → Safari → Movimiento y orientación.'); }, 2500);
 
-  running = true;
-  $('setup').classList.add('hide');
-  $('run').classList.remove('hide');
-  $('hdrBadge').textContent = linea === 'B' ? 'B' : 'M';
+  startOrientation(); startGps();
+  try{ wakeLock=await navigator.wakeLock.request('screen'); }catch(e){}
+
+  running=true;
+  $('setup').classList.add('hide'); $('run').classList.remove('hide');
+  $('hdrBadge').textContent = linea==='B'?'B':'M';
   $('hdrLinea').textContent = LINEAS[linea].nombre;
-  $('hdrSub').textContent = 'Hacia ' + LINEAS[linea].sentidos[dir].hacia;
+  $('hdrSub').textContent = 'Hacia '+LINEAS[linea].sentidos[dir].hacia;
   log(`Inicio en ${stations[idx].n}`);
-  render(); loop();
+  if(!geo.ok) log('Sin geometría de vía: el GPS no puede proyectarse sobre el recorrido','aviso');
+  render(); tick();
 }
 
-function fail(msg){
-  $('err').textContent = msg;
-  $('err').classList.remove('hide');
-  window.scrollTo(0,0);
-}
-function loop(){ if(running){ renderState(); requestAnimationFrame(loop); } }
+function fail(m){ $('err').textContent=m; $('err').classList.remove('hide'); window.scrollTo(0,0); }
 
-/* ---------- Correcciones ---------- */
-function corregir(delta){
-  const n = idx + delta;
-  if(n < 0 || n >= stations.length) return;
-  idx = n; correcciones++;
-  log(`CORRECCIÓN manual → ${stations[idx].n}`, 'correccion');
-  departedAt = null; render();
+/* ---------- Marcas y correcciones ---------- */
+$('marcaLlegada').onclick=()=>{
+  marcas++;
+  const d = discrepM!=null?` (discrepancia ${Math.round(discrepM)} m)`:'';
+  log(`>>> MARCA MANUAL: llegué a una estación${d} <<<`,'marcaLlegada');
+};
+$('marcaArranque').onclick=()=>{
+  marcas++;
+  log(`>>> MARCA MANUAL: arrancó <<<`,'marcaArranque');
+};
+function corregir(d){
+  const n=idx+d; if(n<0||n>=stations.length) return;
+  idx=n; correcciones++;
+  log(`CORRECCIÓN manual → ${stations[idx].n}`,'correccion');
+  enTramo=false; segMoviendo=0; segDesdeSalida=0;
+  cercaDesde=null; lejosDesde=null; render();
 }
-$('next').onclick = () => corregir(1);
-$('prev').onclick = () => corregir(-1);
+$('next').onclick=()=>corregir(1);
+$('prev').onclick=()=>corregir(-1);
 
 /* ---------- Descargas ---------- */
-function bajar(nombre, texto, tipo){
-  const url = URL.createObjectURL(new Blob([texto], {type:tipo}));
-  const a = document.createElement('a');
-  a.href = url; a.download = nombre; a.click();
-  URL.revokeObjectURL(url);
+function bajar(n,txt,tipo){
+  const u=URL.createObjectURL(new Blob([txt],{type:tipo}));
+  const a=document.createElement('a'); a.href=u; a.download=n; a.click();
+  URL.revokeObjectURL(u);
 }
-const sello = () => new Date().toISOString().slice(0,16).replace(/[:T]/g,'-');
+const sello=()=>new Date().toISOString().slice(0,16).replace(/[:T]/g,'-');
 
-$('dlAcc').onclick = () => bajar(
-  `acc-${linea}-${sello()}.csv`,
-  'tMs,ax,ay,az,accelProyectada,vibracion,estado\n'
-  + rawAcc.map(r => r.join(',')).join('\n'),
-  'text/csv');
+$('dlAcc').onclick=()=>bajar(`sensores-${linea}-${sello()}.csv`,
+  'tMs,ax,ay,az,esLineal,giroA,giroB,giroG,brujula,accelProy,vibracion,'
+  +'calidadEje,estado,fuente,confGps,progAccM,progGpsM,discrepM\n'
+  + rawAcc.map(r=>r.join(',')).join('\n'), 'text/csv');
 
-$('dlGps').onclick = () => bajar(
-  `gps-${linea}-${sello()}.csv`,
-  'tMs,lat,lon,precisionM,velocidadMs\n'
-  + rawGps.map(r => r.join(',')).join('\n'),
-  'text/csv');
+$('dlGps').onclick=()=>bajar(`gps-${linea}-${sello()}.csv`,
+  'tMs,lat,lon,precisionM,velocidadMs,rumbo,confGps,desvioViaM,idxSeg,fracSeg,'
+  +'distEstacionM,estGps,progGpsM,progAccM,discrepM,fuente,motivo,estadoGps,estadoAcc\n'
+  + rawGps.map(r=>r.join(',')).join('\n'), 'text/csv');
 
-$('dl').onclick = () => bajar(
-  `viaje-${linea}-${sello()}.json`,
-  JSON.stringify({
-    linea, nombreLinea: LINEAS[linea].nombre,
-    sentido: LINEAS[linea].sentidos[dir].hacia,
-    estacionInicial: stations[+$('from').value]?.n,
-    estacionFinal: stations[idx].n,
-    correcciones, muestreoHz: det ? Math.round(det.hz) : null,
-    muestrasAcc: rawAcc.length, fixesGps: rawGps.length,
-    config: CFG, eventos
-  }, null, 2),
-  'application/json');
+$('dlLog').onclick=()=>bajar(`eventos-${linea}-${sello()}.json`,
+  JSON.stringify({linea, nombreLinea:LINEAS[linea].nombre,
+    sentido:LINEAS[linea].sentidos[dir].hacia,
+    estacionInicial:stations[+$('from').value]?.n,
+    estacionFinal:stations[idx].n,
+    correcciones, marcasManuales:marcas,
+    modoLineal:modoLinear, muestreoHz:det?Math.round(det.vib.hz):null,
+    yaEnMarcha:det?det.yaEnMarcha:null,
+    muestras:rawAcc.length, fixesGps:rawGps.length,
+    llegadasPorAcc:llegadasAcc, llegadasPorGps:llegadasGps,
+    fuenteFinal:sel?sel.fuente:null,
+    cambiosDeFuente:sel?sel.cambios:[],
+    geometriaOk:geo?geo.ok:false,
+    config:CFG, configGps:GCFG, eventos}, null, 2), 'application/json');
 
-$('stop').onclick = () => {
-  running = false;
-  if(wakeLock){ wakeLock.release(); wakeLock = null; }
-  if(watchId !== null) navigator.geolocation.clearWatch(watchId);
-  log(`Fin del viaje. Correcciones: ${correcciones}. `
-    + `${rawAcc.length} muestras, ${rawGps.length} fixes.`);
-  $('stName').textContent = 'Terminado';
-  $('stDesc').textContent = 'Descargá los tres archivos antes de cerrar';
-  $('dot').className = 'dot';
+$('stop').onclick=()=>{
+  running=false;
+  if(wakeLock){ wakeLock.release(); wakeLock=null; }
+  if(watchId!==null) navigator.geolocation.clearWatch(watchId);
+  log(`Fin. ${correcciones} correcciones, ${marcas} marcas, `
+      +`${rawAcc.length} muestras, ${rawGps.length} fixes, `
+      +`${sel?sel.cambios.length:0} cambios de fuente.`);
+  $('stName').textContent='Terminado';
+  $('stDesc').textContent='Descargá los TRES archivos antes de cerrar';
+  $('dot').className='dot';
 };
+$('start').onclick=start;
 
-$('start').onclick = start;
-
-document.addEventListener('visibilitychange', async () => {
-  if(running && document.visibilityState === 'visible' && !wakeLock){
-    try{ wakeLock = await navigator.wakeLock.request('screen'); }catch(e){}
+document.addEventListener('visibilitychange', async()=>{
+  if(running && document.visibilityState==='visible' && !wakeLock){
+    try{ wakeLock=await navigator.wakeLock.request('screen'); }catch(e){}
   }
 });
 </script>
