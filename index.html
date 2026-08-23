@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#1c4b8c">
-<title>Tracker v3</title>
+<title>Tracker v4</title>
 <style>
 :root{--b:#1c4b8c;--bg:#0e1116;--card:#171c24;--line:#232a34;--tx:#e8ecf1;
       --dim:#8b95a3;--ok:#3fb950;--warn:#d29922;--bad:#f85149;--gps:#2f81f7}
@@ -77,12 +77,21 @@ h3{font-size:12px;color:var(--dim);text-transform:uppercase;letter-spacing:.7px;
 .srcWhy{font-size:12px;color:var(--dim);margin-bottom:10px}
 .gbar{height:4px;background:var(--line);border-radius:2px;overflow:hidden;margin:6px 0 10px}
 .gbar i{display:block;height:100%;background:var(--gps);width:0;transition:width .4s}
+.velCard{border:2px solid var(--warn);background:linear-gradient(180deg,rgba(210,153,34,.10),var(--card))}
+.velGrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
+.vm{background:#0b0e13;border-radius:9px;padding:12px;text-align:center}
+.vm .k{font-size:10px;color:var(--dim);text-transform:uppercase;letter-spacing:.6px}
+.vm .v{font-size:27px;font-weight:800;font-variant-numeric:tabular-nums;line-height:1.15}
+.vErr{text-align:center;font-size:21px;font-weight:800;margin:4px 0 12px;
+  font-variant-numeric:tabular-nums}
+.vErr .u{font-size:11px;color:var(--dim);font-weight:600;margin-left:6px;
+  text-transform:uppercase;letter-spacing:.6px}
 </style>
 </head>
 <body>
 <header>
   <div class="badge" id="hdrBadge">?</div>
-  <div><div class="t" id="hdrLinea">Tracker v3</div>
+  <div><div class="t" id="hdrLinea">Tracker v4</div>
        <div class="s" id="hdrSub">Configurar viaje</div></div>
 </header>
 
@@ -94,6 +103,7 @@ h3{font-size:12px;color:var(--dim);text-transform:uppercase;letter-spacing:.7px;
     <select id="linea">
       <option value="B">Subte B</option>
       <option value="MITRE">Mitre · ramal Suárez</option>
+      <option value="VEL">— Prueba de velocidad (auto) —</option>
     </select>
     <label>Sentido</label><select id="dir"></select>
     <label>Estación donde subís</label><select id="from"></select>
@@ -104,12 +114,43 @@ h3{font-size:12px;color:var(--dim);text-transform:uppercase;letter-spacing:.7px;
       abierto — manda el GPS, que da posición absoluta. Cuando la señal se cae,
       pasa solo al acelerómetro. El cambio se registra y podés verlo en vivo.<br><br>
       En el subte el GPS no va a servir nunca, y está bien: ahí es donde el
-      acelerómetro tiene que demostrar que funciona.
+      acelerómetro tiene que demostrar que funciona.<br><br>
+      <b>El acelerómetro lleva su propia cuenta en paralelo</b>, mande o no.
+      Al final vas a ver dos resultados: dónde cree estar el marcador y dónde
+      cree estar la sombra del acelerómetro. Comparar los dos contra tus marcas
+      es todo el experimento.
     </div>
   </div>
 </section>
 
 <section id="run" class="hide">
+  <div class="card velCard hide" id="velCard">
+    <h3>Prueba de velocidad · acelerómetro vs GPS</h3>
+    <div class="velGrid">
+      <div class="vm"><div class="k">GPS (verdad)</div><div class="v" id="vGps">—</div></div>
+      <div class="vm"><div class="k">Integrado</div><div class="v" id="vAcc">—</div></div>
+    </div>
+    <div class="vErr"><span id="vErrTxt">—</span><span class="u">de error</span></div>
+    <div class="grid">
+      <div class="m"><div class="k">Desde el reinicio</div><div class="v" id="vSeg">0 s</div></div>
+      <div class="m"><div class="k">Deriva</div><div class="v" id="vDrift">—</div></div>
+      <div class="m"><div class="k">Error máximo</div><div class="v" id="vMax">—</div></div>
+      <div class="m"><div class="k">Movimiento tel.</div><div class="v" id="vGiro">—</div></div>
+    </div>
+    <div class="note" id="vNota">Esperando señal de GPS…</div>
+    <button class="marca" id="vReset">Reiniciar el integrador</button>
+    <button class="sec" id="vPost">Cambié la postura del teléfono</button>
+    <div class="note">
+      <b>Cómo hacer la prueba.</b> Primero un tramo con el teléfono <b>apoyado y
+      quieto</b> (portavasos, pierna, asiento). Eso mide la deriva del sensor solo.
+      Después tocá «Cambié la postura» y hacé otro tramo <b>con el teléfono en la
+      mano, moviéndolo</b> como si fueras parado en un vagón. La diferencia entre
+      los dos tramos es la respuesta.<br><br>
+      El integrador se reinicia solo cada vez que el auto queda detenido, que es
+      cuando el GPS confirma velocidad cero.
+    </div>
+  </div>
+
   <div class="card src esAcc" id="srcCard">
     <div class="srcTop">
       <div class="n" id="srcName">—</div>
@@ -141,12 +182,12 @@ h3{font-size:12px;color:var(--dim);text-transform:uppercase;letter-spacing:.7px;
     <div class="note" id="confTxt" style="margin-top:5px"></div>
   </div>
 
-  <div class="card">
+  <div class="card" id="listCard">
     <h3>Recorrido</h3>
     <ul class="stations" id="list"></ul>
   </div>
 
-  <div class="card">
+  <div class="card" id="marcasCard">
     <h3>Marcas manuales</h3>
     <div class="note" style="margin-top:0">
       Tocá el amarillo apenas el tren se detiene, sin esperar a que abran las
@@ -170,7 +211,13 @@ h3{font-size:12px;color:var(--dim);text-transform:uppercase;letter-spacing:.7px;
       <div class="m"><div class="k">Calidad eje</div><div class="v" id="mEje">—</div></div>
       <div class="m"><div class="k">Muestreo</div><div class="v" id="mHz">— Hz</div></div>
       <div class="m"><div class="k">Brújula</div><div class="v" id="mBru">—</div></div>
+      <div class="m"><div class="k">Movimiento tel.</div><div class="v" id="mGiro">—</div></div>
+      <div class="m"><div class="k">Sombra ACC</div><div class="v" id="mSombra" style="font-size:12px">—</div></div>
     </div>
+    <div class="note">«Movimiento tel.» es cuánto se mueve el teléfono en tu mano.
+    Verde es estable; rojo significa que el ruido del brazo puede tapar la señal
+    del tren. «Sombra ACC» es dónde cree estar el acelerómetro por su cuenta,
+    aunque mande el GPS.</div>
     <div class="note" id="modoNota"></div>
   </div>
 
@@ -513,10 +560,11 @@ const GCFG = {
   // --- Movimiento según GPS ---
   velDetenido:    1.5,   // m/s
   velEnMarcha:    3.0,   // m/s
-  tauVel:         2.0,   // s de suavizado de la velocidad
+  tauVel:         1.0,   // s de suavizado (2.0 retrasaba la parada 7,6 s)
 
   // --- Llegada a estación por proximidad ---
   radioEstacion:  70,    // m
+  sostenerLlegada: 1.5,  // s dentro del radio y detenido antes de dar la llegada
 };
 
 const R_TIERRA = 6371000;
@@ -686,7 +734,7 @@ class GpsQuality {
    por diferencia de posición.
    -------------------------------------------------------------------------- */
 class GpsMotion {
-  constructor(){ this.v = 0; this.estado = 'DESCONOCIDO'; this.prev = null; }
+  constructor(){ this.v = 0; this.vInst = null; this.estado = 'DESCONOCIDO'; this.prev = null; }
 
   nuevoFix(tS, lat, lon, speed){
     let v = null;
@@ -699,12 +747,17 @@ class GpsMotion {
       const dt = this.prev ? Math.max(0.05, tS - this.prev.t) : 1;
       const a  = 1 - Math.exp(-dt / GCFG.tauVel);
       this.v   = this.prev ? this.v + a*(v - this.v) : v;
+      this.vInst = v;
     }
     this.prev = {t: tS, lat, lon};
 
-    // Histéresis simple: no cambia de estado en la zona intermedia
-    if(this.v > GCFG.velEnMarcha)      this.estado = 'EN_MARCHA';
-    else if(this.v < GCFG.velDetenido) this.estado = 'DETENIDO';
+    // Para DETENERSE miramos la velocidad instantánea; para arrancar, la
+    // suavizada. Asimétrico a propósito: el frenado es rápido y el suavizado
+    // llegaba 7,6 s tarde a la estación, pero un fix ruidoso aislado no debe
+    // sacarnos de DETENIDO.
+    const vBaja = Math.min(this.v, this.vInst != null ? this.vInst : this.v);
+    if(this.v > GCFG.velEnMarcha)       this.estado = 'EN_MARCHA';
+    else if(vBaja < GCFG.velDetenido)   this.estado = 'DETENIDO';
     return this.estado;
   }
 }
@@ -776,8 +829,29 @@ let idxGps=null;                 // estación que cree el GPS
 let cercaDesde=null, lejosDesde=null;
 let llegadasAcc=0, llegadasGps=0;
 
+/* Tracker SOMBRA — el acelerómetro lleva su propia cuenta, siempre, mande o
+   no. Sin esto la comparación es tramposa: cuando el GPS marcaba llegada
+   reseteaba el contador del ACC y sus detenciones aparecían como "0 s de
+   viaje". Ahora las dos estimaciones corren en paralelo y se comparan al
+   final contra las marcas manuales. */
+const sombra = {idx:0, enTramo:false, segMoviendo:0, segDesdeSalida:0,
+                llegadas:0, descartes:0, eventos:[]};
+let giroEnv=0;                 // envolvente del giroscopio: qué tan quieto está el teléfono
+
+/* MODO PRUEBA DE VELOCIDAD — integra la aceleración y la compara contra el GPS.
+   No sirve para navegar: sirve para medir cuánto deriva la integración, que es
+   el número que decide si el acelerómetro puede sostener una estimación de
+   velocidad durante un tramo entero o no. */
+const vel = {activo:false, v:0, t0:0, errMax:0, err:0, drift:0,
+             postura:1, marcas:[], muestras:0};
+
 /* ---------- Setup ---------- */
 function fillSentidos(){
+  if($('linea').value==='VEL'){
+    $('dir').innerHTML='<option>—</option>';
+    $('from').innerHTML='<option>—</option>';
+    return;
+  }
   const L=LINEAS[$('linea').value];
   $('dir').innerHTML=L.sentidos.map((s,i)=>`<option value="${i}">Hacia ${s.hacia}</option>`).join('');
   fillEstaciones();
@@ -828,6 +902,9 @@ function renderState(){
   $('mEje').textContent=(det.eje.calidad*100).toFixed(0)+'%';
   $('mHz').textContent=Math.round(det.vib.hz)+' Hz';
   $('mBru').textContent=brujula!==null?Math.round(brujula)+'°':'—';
+  $('mGiro').textContent=giroEnv.toFixed(1)+'°/s';
+  $('mGiro').style.color = giroEnv<1.5?'#22c55e':(giroEnv<4?'#eab308':'#ef4444');
+  $('mSombra').textContent = stations[sombra.idx] ? stations[sombra.idx].n : '—';
   $('mN').textContent=rawAcc.length.toLocaleString('es-AR');
   $('mG').textContent=rawGps.length;
 
@@ -850,6 +927,25 @@ function renderState(){
   $('gDisc').style.color = discrepM==null ? '' :
       (discrepM<150?'#22c55e':(discrepM<400?'#eab308':'#ef4444'));
   $('gEst').textContent  = idxGps!=null ? stations[idxGps].n : '—';
+
+  if(vel.activo){
+    const kmh=x=>x*3.6;
+    const vg = gm&&gm.prev ? gm.v : null;
+    $('vGps').textContent = vg!=null ? kmh(vg).toFixed(0)+' km/h' : '—';
+    $('vAcc').textContent = kmh(vel.v).toFixed(0)+' km/h';
+    const e=kmh(vel.err);
+    $('vErrTxt').textContent = (e>=0?'+':'')+e.toFixed(1)+' km/h';
+    $('vErrTxt').style.color = Math.abs(e)<5?'#22c55e':(Math.abs(e)<15?'#eab308':'#ef4444');
+    const seg=(performance.now()-vel.t0)/1000;
+    $('vSeg').textContent = seg.toFixed(0)+' s';
+    $('vDrift').textContent = (vel.drift*3.6).toFixed(2)+' km/h/s';
+    $('vMax').textContent = kmh(vel.errMax).toFixed(0)+' km/h';
+    $('vGiro').textContent = giroEnv.toFixed(1)+'°/s';
+    $('vGiro').style.color = giroEnv<3?'#22c55e':(giroEnv<8?'#eab308':'#ef4444');
+    $('vNota').textContent = gq&&gq.ultFix
+      ? `GPS ${Math.round(gq.ultFix.acc)} m · postura ${vel.postura} · ${vel.muestras} muestras`
+      : 'Sin GPS todavía: sin verdad de campo la prueba no mide nada.';
+  }
 
   // Marcador: avanza por tiempo, no por integración.
   const prox=stations[idx+1];
@@ -890,6 +986,25 @@ function tick(){
     segDesdeSalida+=dt;
     if(enMov(det.estado)) segMoviendo+=dt;
   }
+  if(sombra.enTramo){
+    sombra.segDesdeSalida+=dt;
+    if(enMov(det.estado)) sombra.segMoviendo+=dt;
+  }
+
+  if(vel.activo && det && dt>0 && dt<0.5){
+    // Integración pura: v = v + a·dt. Sin trucos, para que la deriva se vea.
+    vel.v += det.accel*dt;
+    vel.muestras++;
+    const seg=(t-vel.t0)/1000;
+    if(gm && gm.prev){
+      vel.err = vel.v - gm.v;
+      if(Math.abs(vel.err)>Math.abs(vel.errMax)) vel.errMax=vel.err;
+      vel.drift = seg>2 ? vel.err/seg : 0;
+      // Reinicio automático: si el GPS confirma que está detenido, la
+      // velocidad verdadera es 0 y podemos empezar de nuevo desde ahí.
+      if(gm.estado==='DETENIDO' && Math.abs(vel.v)>0.4 && seg>8) reiniciarVel('auto detenido');
+    }
+  }
 
   // El selector se reevalúa 4 veces por segundo: alcanza y no cuesta nada.
   if(t-tUltSel>250){
@@ -898,6 +1013,9 @@ function tick(){
     const conf=gq.evaluar(tS);
     sel.actualizar(tS, conf);
     calcularProgresos();
+    // También acá, no solo con cada fix: el GPS a veces deja huecos de 6 s
+    // justo al parar, y esperar al fix siguiente retrasaba la llegada.
+    evaluarGps(tS);
   }
 
   renderState();
@@ -910,37 +1028,55 @@ function tick(){
    así se puede medir después cuánto se habría equivocado.                 */
 function onEvento(e){
   const mandaAcc = !sel || sel.fuente==='ACC';
+  const tS = (performance.now()-t0)/1000;
 
   if(e.tipo==='yaEnMarcha'){
     log('Arrancó con el viaje YA empezado — confirmá la estación','aviso');
+    sombra.enTramo=true; sombra.segMoviendo=0; sombra.segDesdeSalida=0;
     if(mandaAcc){ enTramo=true; segMoviendo=0; segDesdeSalida=0; }
     return;
   }
   if(e.tipo!=='estado') return;
 
   if(e.hacia===S.ARRANCANDO){
-    if(!enTramo){ enTramo=true; segMoviendo=0; segDesdeSalida=0; }
-    log(`ACC: arranque desde ${stations[idx].n} (a=${e.accel.toFixed(3)} conf=${e.conf.toFixed(2)})`,
+    if(!sombra.enTramo){
+      sombra.enTramo=true; sombra.segMoviendo=0; sombra.segDesdeSalida=0;
+      sombra.eventos.push({t:+tS.toFixed(1), tipo:'arranque', est:sombra.idx});
+    }
+    if(!enTramo && mandaAcc){ enTramo=true; segMoviendo=0; segDesdeSalida=0; }
+    log(`ACC: arranque desde ${stations[sombra.idx].n} (a=${e.accel.toFixed(3)} conf=${e.conf.toFixed(2)})`,
         mandaAcc?'arranque':'sombra');
   }
-  if(e.hacia===S.FRENANDO)
+
+  if(e.hacia===S.FRENANDO){
+    sombra.eventos.push({t:+tS.toFixed(1), tipo:'frenada', a:+e.accel.toFixed(3)});
     log(`ACC: frenando (a=${e.accel.toFixed(3)})`, mandaAcc?'frenada':'sombra');
+  }
 
   if(e.hacia===S.DETENIDO){
-    const prox=stations[idx+1];
-    if(!prox){ log('Fin del recorrido'); return; }
+    const prox=stations[sombra.idx+1];
+    if(!prox){ log('ACC: fin del recorrido para la sombra','sombra'); return; }
     const prog=prox.t||120;
-    if(segMoviendo < prog*CFG.fraccionMinTramo){
-      log(`ACC: detención a los ${segMoviendo.toFixed(0)}s (esperado ${prog}s) → intermedia`,
+
+    // Contabilidad de la sombra: siempre, con su propio contador
+    if(sombra.segMoviendo < prog*CFG.fraccionMinTramo){
+      sombra.descartes++;
+      sombra.eventos.push({t:+tS.toFixed(1), tipo:'descarte',
+                           seg:+sombra.segMoviendo.toFixed(0), prog});
+      log(`ACC: detención a los ${sombra.segMoviendo.toFixed(0)}s (esperado ${prog}s) → intermedia`,
           'intermedia');
-      return;
+    } else {
+      sombra.idx++; sombra.llegadas++;
+      sombra.eventos.push({t:+tS.toFixed(1), tipo:'llegada', est:sombra.idx,
+                           nombre:prox.n, dur:+sombra.segDesdeSalida.toFixed(0), prog});
+      log(`ACC: llegada a ${prox.n} en ${sombra.segDesdeSalida.toFixed(0)}s`
+          + (mandaAcc?'':' (sombra, no manda)'), mandaAcc?'llegada':'sombra');
+      sombra.enTramo=false; sombra.segMoviendo=0; sombra.segDesdeSalida=0;
+
+      // Si el acelerómetro es la fuente activa, además mueve el marcador
+      if(mandaAcc && sombra.idx!==idx+1) { /* desfasados: no forzamos */ }
+      if(mandaAcc){ llegadasAcc++; avanzar('ACC', sombra.segDesdeSalida, prog); }
     }
-    if(!mandaAcc){
-      log(`ACC: habría marcado llegada a ${prox.n} (${segDesdeSalida.toFixed(0)}s) — no manda`,'sombra');
-      return;
-    }
-    llegadasAcc++;
-    avanzar('ACC', segDesdeSalida, prog);
   }
 }
 
@@ -969,7 +1105,7 @@ function evaluarGps(tS){
 
   if(enEstProx && quieto){
     if(cercaDesde==null) cercaDesde=tS;
-    else if(tS-cercaDesde > 2.0){
+    else if(tS-cercaDesde > GCFG.sostenerLlegada){
       llegadasGps++;
       avanzar('GPS', segDesdeSalida, prox.t||120);
     }
@@ -1047,14 +1183,19 @@ async function start(){
     }catch(e){ return fail('La página tiene que estar servida por HTTPS.'); }
   }
 
-  linea=$('linea').value; dir=+$('dir').value; idx=+$('from').value;
-  stations=LINEAS[linea].sentidos[dir].est;
+  linea=$('linea').value;
+  vel.activo = (linea==='VEL');
+  if(vel.activo){ dir=0; idx=0; stations=LINEAS.MITRE.sentidos[0].est; }
+  else { dir=+$('dir').value; idx=+$('from').value;
+         stations=LINEAS[linea].sentidos[dir].est; }
 
   // Distancia acumulada del GTFS, para poder comparar los dos progresos
   acumGtfs=[0];
   for(let i=1;i<stations.length;i++) acumGtfs.push(acumGtfs[i-1]+(stations[i].d||0));
 
-  geo=new RouteGeometry(LINEAS[linea].sentidos[dir]);
+  sombra.idx=idx;
+  geo = vel.activo ? {ok:false, proyectar:()=>null}
+                   : new RouteGeometry(LINEAS[linea].sentidos[dir]);
   gq=new GpsQuality(); gm=new GpsMotion(); sel=new SourceSelector();
   sel.onCambio=(de,a,c)=>{
     log(`FUENTE: ${de} → ${a} (confianza GPS ${(c*100).toFixed(0)}%${a==='ACC'?', '+gq.motivo:''})`,'fuente');
@@ -1079,6 +1220,13 @@ async function start(){
     const t=performance.now();
     const rr = ev.rotationRate || {alpha:null,beta:null,gamma:null};
     giro = {a:rr.alpha, b:rr.beta, g:rr.gamma};
+    // Cuánto se mueve el teléfono en la mano. La calidad del eje NO capta
+    // esto — en el viaje parado dio 90%, igual que sentado — así que el
+    // giroscopio es la única señal directa de estabilidad que tenemos.
+    if(rr.alpha!=null){
+      const w=Math.hypot(rr.alpha||0, rr.beta||0, rr.gamma||0);
+      giroEnv += 0.02*(w - giroEnv);
+    }
 
     det.push(src.x||0, src.y||0, src.z||0, t, lin);
 
@@ -1094,7 +1242,10 @@ async function start(){
         +det.eje.calidad.toFixed(3), det.estado,
         sel?sel.fuente:'', gq?+gq.conf.toFixed(3):'',
         Math.round(progAccM), progGpsM!=null?Math.round(progGpsM):'',
-        discrepM!=null?Math.round(discrepM):'']);
+        discrepM!=null?Math.round(discrepM):'',
+        +giroEnv.toFixed(2), sombra.idx,
+        vel.activo?+vel.v.toFixed(3):'', vel.activo?+vel.err.toFixed(3):'',
+        vel.activo?vel.postura:'']);
     }
   });
 
@@ -1106,10 +1257,19 @@ async function start(){
 
   running=true;
   $('setup').classList.add('hide'); $('run').classList.remove('hide');
-  $('hdrBadge').textContent = linea==='B'?'B':'M';
-  $('hdrLinea').textContent = LINEAS[linea].nombre;
-  $('hdrSub').textContent = 'Hacia '+LINEAS[linea].sentidos[dir].hacia;
-  log(`Inicio en ${stations[idx].n}`);
+  if(vel.activo){
+    $('velCard').classList.remove('hide');
+    for(const id of ['srcCard','listCard','marcasCard']) $(id)?.classList.add('hide');
+    $('hdrBadge').textContent='V'; $('hdrLinea').textContent='Prueba de velocidad';
+    $('hdrSub').textContent='acelerómetro contra GPS';
+    vel.t0=performance.now();
+    log('Modo prueba de velocidad. El marcador de estaciones no se usa.');
+  } else {
+    $('hdrBadge').textContent = linea==='B'?'B':'M';
+    $('hdrLinea').textContent = LINEAS[linea].nombre;
+    $('hdrSub').textContent = 'Hacia '+LINEAS[linea].sentidos[dir].hacia;
+    log(`Inicio en ${stations[idx].n}`);
+  }
   if(!geo.ok) log('Sin geometría de vía: el GPS no puede proyectarse sobre el recorrido','aviso');
   render(); tick();
 }
@@ -1117,6 +1277,24 @@ async function start(){
 function fail(m){ $('err').textContent=m; $('err').classList.remove('hide'); window.scrollTo(0,0); }
 
 /* ---------- Marcas y correcciones ---------- */
+function reiniciarVel(motivo){
+  const seg=(performance.now()-vel.t0)/1000;
+  if(seg>3) log(`VEL: reinicio tras ${seg.toFixed(0)}s — error final `
+    +`${(vel.err*3.6).toFixed(1)} km/h (${motivo})`,'fuente');
+  vel.marcas.push({t:+((performance.now()-t0)/1000).toFixed(1), tipo:'reinicio',
+                   seg:+seg.toFixed(1), errFinal:+(vel.err*3.6).toFixed(1), motivo,
+                   postura:vel.postura});
+  vel.v = gm&&gm.prev ? gm.v : 0;
+  vel.t0=performance.now(); vel.err=0; vel.errMax=0; vel.drift=0;
+}
+$('vReset').onclick=()=>reiniciarVel('manual');
+$('vPost').onclick=()=>{
+  vel.postura++;
+  vel.marcas.push({t:+((performance.now()-t0)/1000).toFixed(1), tipo:'postura',
+                   postura:vel.postura});
+  log(`>>> POSTURA ${vel.postura} — cambiaste cómo sostenés el teléfono <<<`,'marcaLlegada');
+  reiniciarVel('cambio de postura');
+};
 $('marcaLlegada').onclick=()=>{
   marcas++;
   const d = discrepM!=null?` (discrepancia ${Math.round(discrepM)} m)`:'';
@@ -1128,7 +1306,8 @@ $('marcaArranque').onclick=()=>{
 };
 function corregir(d){
   const n=idx+d; if(n<0||n>=stations.length) return;
-  idx=n; correcciones++;
+  idx=n; sombra.idx=n; correcciones++;
+  sombra.enTramo=false; sombra.segMoviendo=0; sombra.segDesdeSalida=0;
   log(`CORRECCIÓN manual → ${stations[idx].n}`,'correccion');
   enTramo=false; segMoviendo=0; segDesdeSalida=0;
   cercaDesde=null; lejosDesde=null; render();
@@ -1146,7 +1325,8 @@ const sello=()=>new Date().toISOString().slice(0,16).replace(/[:T]/g,'-');
 
 $('dlAcc').onclick=()=>bajar(`sensores-${linea}-${sello()}.csv`,
   'tMs,ax,ay,az,esLineal,giroA,giroB,giroG,brujula,accelProy,vibracion,'
-  +'calidadEje,estado,fuente,confGps,progAccM,progGpsM,discrepM\n'
+  +'calidadEje,estado,fuente,confGps,progAccM,progGpsM,discrepM,giroEnv,estSombra,'
+  +'velAccMs,errVelMs,postura\n'
   + rawAcc.map(r=>r.join(',')).join('\n'), 'text/csv');
 
 $('dlGps').onclick=()=>bajar(`gps-${linea}-${sello()}.csv`,
@@ -1164,6 +1344,11 @@ $('dlLog').onclick=()=>bajar(`eventos-${linea}-${sello()}.json`,
     yaEnMarcha:det?det.yaEnMarcha:null,
     muestras:rawAcc.length, fixesGps:rawGps.length,
     llegadasPorAcc:llegadasAcc, llegadasPorGps:llegadasGps,
+    sombraAcc:{estacionFinal:stations[sombra.idx]?.n, indice:sombra.idx,
+               llegadas:sombra.llegadas, descartes:sombra.descartes,
+               eventos:sombra.eventos},
+    giroMedio:+giroEnv.toFixed(2),
+    pruebaVelocidad: vel.activo ? {reinicios:vel.marcas, posturas:vel.postura} : null,
     fuenteFinal:sel?sel.fuente:null,
     cambiosDeFuente:sel?sel.cambios:[],
     geometriaOk:geo?geo.ok:false,
@@ -1176,6 +1361,9 @@ $('stop').onclick=()=>{
   log(`Fin. ${correcciones} correcciones, ${marcas} marcas, `
       +`${rawAcc.length} muestras, ${rawGps.length} fixes, `
       +`${sel?sel.cambios.length:0} cambios de fuente.`);
+  log(`Marcador: ${stations[idx].n} · sombra del acelerómetro: `
+      +`${stations[sombra.idx]?stations[sombra.idx].n:'—'} `
+      +`(${sombra.llegadas} llegadas, ${sombra.descartes} descartes)`,'fuente');
   $('stName').textContent='Terminado';
   $('stDesc').textContent='Descargá los TRES archivos antes de cerrar';
   $('dot').className='dot';
